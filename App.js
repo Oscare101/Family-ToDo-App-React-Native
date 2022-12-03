@@ -1,20 +1,58 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react'
 
-export default function App() {
+import { StatusBar } from 'expo-status-bar'
+import { StyleSheet, Text, View, TextInput } from 'react-native'
+
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+
+import auth from './firebase/firebase-config'
+
+import Registration from './components/Registration'
+import Login from './components/Login'
+import Header from './components/Header'
+import UserScreen from './components/UserScreen'
+
+const Stack = createStackNavigator()
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{
+          headerTitle: () => <Header name="login" />,
+          headerStyle: { height: 150, backgroundColor: '#00e4d0' },
+        }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="Registration"
+        component={Registration}
+        options={{
+          headerTitle: () => <Header name="registration" />,
+          headerStyle: { height: 150, backgroundColor: '#00e4d0' },
+          headerLeft: () => null,
+        }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="UserScreen"
+        component={UserScreen}
+        options={{
+          headerTitle: () => <Header name="user" />,
+          headerStyle: { height: 150, backgroundColor: '#00e4d0' },
+          headerLeft: () => null,
+        }}
+      ></Stack.Screen>
+    </Stack.Navigator>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default () => {
+  return (
+    <NavigationContainer>
+      <StatusBar style="auto" />
+      <App />
+    </NavigationContainer>
+  )
+}
