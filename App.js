@@ -15,6 +15,12 @@ import UserScreen from './components/UserScreen'
 
 const Stack = createStackNavigator()
 
+const forFade = ({ current }) => ({
+  cardStyle: {
+    opacity: current.progress,
+  },
+})
+
 function App() {
   return (
     <Stack.Navigator>
@@ -24,6 +30,7 @@ function App() {
         options={{
           headerTitle: () => <Header name="login" />,
           headerStyle: { height: 150, backgroundColor: '#00e4d0' },
+          cardStyleInterpolator: forFade,
         }}
       ></Stack.Screen>
       <Stack.Screen
@@ -33,15 +40,18 @@ function App() {
           headerTitle: () => <Header name="registration" />,
           headerStyle: { height: 150, backgroundColor: '#00e4d0' },
           headerLeft: () => null,
+          cardStyleInterpolator: forFade,
         }}
       ></Stack.Screen>
       <Stack.Screen
         name="UserScreen"
         component={UserScreen}
         options={{
-          headerTitle: () => <Header name="user" />,
-          headerStyle: { height: 150, backgroundColor: '#00e4d0' },
+          headerShown: false,
+          // headerTitle: () => <Header name="user" />,
+          // headerStyle: { height: 150, backgroundColor: '#00e4d0' },
           headerLeft: () => null,
+          cardStyleInterpolator: forFade,
         }}
       ></Stack.Screen>
     </Stack.Navigator>
