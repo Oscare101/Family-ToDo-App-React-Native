@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { collection, getDocs, doc, setDoc } from 'firebase/firestore/lite'
 import { db } from '../firebase/firebase-config'
-import { Text } from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
 const auth = getAuth()
 
-export default function MainNavigation() {
+export default function UserScreen() {
   const [name, setName] = useState('')
+  const navigation = useNavigation()
 
   useEffect(() => {
     console.log('useEffect navigation:')
@@ -32,6 +34,9 @@ export default function MainNavigation() {
       <Text>
         user:{auth.currentUser.email}, {name}
       </Text>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Text>back</Text>
+      </TouchableOpacity>
     </>
   )
 }

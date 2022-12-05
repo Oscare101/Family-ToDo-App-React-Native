@@ -11,7 +11,7 @@ import auth from './firebase/firebase-config'
 import Registration from './components/Registration'
 import Login from './components/Login'
 import Header from './components/Header'
-import UserScreen from './components/UserScreen'
+import UserScreen from './components/MainNavigation'
 
 const Stack = createStackNavigator()
 
@@ -29,7 +29,7 @@ function App() {
         component={Login}
         options={{
           headerTitle: () => <Header name="login" />,
-          headerStyle: { height: 150, backgroundColor: '#00e4d0' },
+          headerStyle: { height: 150, backgroundColor: 'orange' },
           cardStyleInterpolator: forFade,
         }}
       ></Stack.Screen>

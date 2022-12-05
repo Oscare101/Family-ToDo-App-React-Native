@@ -10,14 +10,16 @@ import {
 import { useNavigation } from '@react-navigation/native'
 // import auth from '../firebase/firebase-config'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { Ionicons } from '@expo/vector-icons'
 
 const auth = getAuth()
 
 export default function Login() {
   const navigation = useNavigation()
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('123@gmail.com')
+  const [password, setPassword] = useState('123456')
+  const [isSecure, setIsSecure] = useState(true)
 
   const loginUser = () => {
     signInWithEmailAndPassword(auth, email, password)
@@ -38,12 +40,24 @@ export default function Login() {
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
-      <TextInput
-        placeholder="password"
-        style={styles.input}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
+      <View style={{ width: '100', flexDirection: 'row' }}>
+        <TextInput
+          placeholder="password"
+          style={styles.input}
+          value={password}
+          autoCorrect={false}
+          secureTextEntry={isSecure}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
+          <Ionicons
+            name={isSecure ? 'eye-off' : 'eye'}
+            size={24}
+            color="black"
+          />
+        </TouchableOpacity>
+      </View>
+
       <TouchableOpacity onPress={() => loginUser(email, password)}>
         <View style={styles.buttonSubmit}>
           <Text style={styles.buttonText}>Log in</Text>
