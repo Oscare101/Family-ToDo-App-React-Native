@@ -24,13 +24,18 @@ const Data = [
     screen: 'ToDoScreen',
   },
   { id: 3, text: 'Plans', icon: 'calendar-outline', screen: 'ToDoScreen' },
-  { id: 4, text: 'Family', icon: 'people-outline', screen: 'ToDoScreen' },
+  { id: 4, text: 'Family', icon: 'people-outline', screen: 'UserScreen' },
 ]
 
 export default function MainScreen() {
+  const navigation = useNavigation()
+
   const renderFlatlist = ({ item }) => {
     return (
-      <TouchableOpacity style={styles.flatlistBlock}>
+      <TouchableOpacity
+        style={styles.flatlistBlock}
+        onPress={() => navigation.navigate('ToDoScreen')}
+      >
         <Ionicons name={item.icon} size={40} color="red" />
         <Text>{item.text}</Text>
       </TouchableOpacity>

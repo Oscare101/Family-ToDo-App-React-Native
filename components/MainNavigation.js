@@ -26,7 +26,7 @@ export default function MainNavigation() {
         }}
       ></Stack.Screen>
       <Stack.Screen
-        name="ToDo"
+        name="ToDoScreen"
         component={ToDoScreen}
         options={{
           headerShown: false,
@@ -35,7 +35,7 @@ export default function MainNavigation() {
         }}
       ></Stack.Screen>
       <Stack.Screen
-        name="User"
+        name="UserScreen"
         component={UserScreen}
         options={{
           headerShown: false,
