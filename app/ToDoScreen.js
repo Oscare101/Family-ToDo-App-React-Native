@@ -27,17 +27,20 @@ export default function ToDoScreen() {
       const userList = userSnapshot.docs.map((doc) => doc.data())
 
       userList.map((item) => {
-        console.log('user map:', item['user-families'])
+        // console.log('user map:', item['user-families'])
         if (item['user-email'] == auth.currentUser.email) {
           setUser(item['user-families'])
-          family.push(item['user-families'].todoList)
+          family.push(item['user-families'])
+          // console.log(item['user-families'])
+
           // console.log('+++', item['user-families'][0])
         }
       })
+      GetData()
     }
     GetUser()
+    console.log(family, user)
 
-    // user.map((item) => console.log('user items', item))
     console.log('family:', family)
     const GetData = async () => {
       const userCol = collection(db, 'families')
@@ -46,8 +49,8 @@ export default function ToDoScreen() {
       userList.map((item) => {
         console.log('map:', family[0], item['family-name'])
         if (family[0].includes(item['family-name'])) {
-          setList([...list, item])
-          console.log('item:', item)
+          setList(item.todoList)
+          console.log('item:', item.todoList[0].item)
         } else {
         }
       })
@@ -60,7 +63,7 @@ export default function ToDoScreen() {
       <Text>-----To Do Screen-----</Text>
       {list.map((item, index) => (
         <Text key={index}>
-          {item.item}, {item.isActive}
+          {item.item}, {item.isActive.toString()}
         </Text>
       ))}
       <Text>{user}</Text>
