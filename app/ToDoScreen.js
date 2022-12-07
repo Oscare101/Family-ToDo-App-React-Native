@@ -20,26 +20,33 @@ export default function ToDoScreen() {
   const [list, setList] = useState([])
 
   useEffect(() => {
+    let family = []
     const GetUser = async () => {
       const userCol = collection(db, 'users')
       const userSnapshot = await getDocs(userCol)
       const userList = userSnapshot.docs.map((doc) => doc.data())
 
       userList.map((item) => {
+        console.log('user map:', item['user-families'])
         if (item['user-email'] == auth.currentUser.email) {
           setUser(item['user-families'])
+          family.push(item['user-families'].todoList)
+          // console.log('+++', item['user-families'][0])
         }
       })
     }
     GetUser()
 
+    // user.map((item) => console.log('user items', item))
+    console.log('family:', family)
     const GetData = async () => {
       const userCol = collection(db, 'families')
       const userSnapshot = await getDocs(userCol)
       const userList = userSnapshot.docs.map((doc) => doc.data())
       userList.map((item) => {
-        if (user.includes(item['family-name'])) {
-          setList(item)
+        console.log('map:', family[0], item['family-name'])
+        if (family[0].includes(item['family-name'])) {
+          setList([...list, item])
           console.log('item:', item)
         } else {
         }
@@ -57,9 +64,10 @@ export default function ToDoScreen() {
         </Text>
       ))}
       <Text>{user}</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('User')}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
         <Text>To User</Text>
       </TouchableOpacity>
+      <Text></Text>
     </>
   )
 }

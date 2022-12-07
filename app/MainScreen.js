@@ -46,7 +46,7 @@ export default function MainScreen() {
     <View style={styles.container}>
       <Text>Main</Text>
       <View style={styles.headerBlock}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('UserScreen')}>
           <Ionicons name="person-circle-outline" size={35} color="red" />
         </TouchableOpacity>
         <TouchableOpacity>
