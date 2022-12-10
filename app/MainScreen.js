@@ -44,6 +44,10 @@ export default function MainScreen() {
     const GetUser = async () => {
       const userCol = collection(db, 'users')
       const userSnapshot = await getDocs(userCol)
+      //   waitFor(() => {
+      //   expect(getDocs(userCol)).toHaveBeenCalledWith()
+      // }, 10000)
+
       const userList = userSnapshot.docs.map((doc) => doc.data())
 
       userList.map((item) => {
@@ -68,6 +72,9 @@ export default function MainScreen() {
     const GetData = async () => {
       const userCol = collection(db, 'families')
       const userSnapshot = await getDocs(userCol)
+      //   waitFor(() => {
+      //   expect(getDocs(userCol)).toHaveBeenCalledWith()
+      // }, 10000)
       const userList = userSnapshot.docs.map((doc) => doc.data())
       userList.map((item) => {
         console.log('map:', family[0], item['family-name'])
@@ -80,6 +87,7 @@ export default function MainScreen() {
     }
     GetData()
     console.log('list:', list)
+    console.log(!!userFamilies, !!name, !!list)
   }, [])
 
   const renderFlatlist = ({ item }) => {
@@ -98,31 +106,34 @@ export default function MainScreen() {
       </TouchableOpacity>
     )
   }
-
-  return (
-    <View style={styles.container}>
-      <Text>Main</Text>
-      <View style={styles.headerBlock}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('UserScreen', { name: name })}
-        >
-          <Ionicons name="person-circle-outline" size={35} color="red" />
-        </TouchableOpacity>
+  if (!!userFamilies && !!name && !!list) {
+    return (
+      <View style={styles.container}>
+        <Text>Main</Text>
+        <View style={styles.headerBlock}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('UserScreen', { name: name })}
+          >
+            <Ionicons name="person-circle-outline" size={35} color="red" />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Ionicons name="settings-outline" size={35} color="red" />
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          numColumns={2}
+          data={Data}
+          renderItem={renderFlatlist}
+          keyExtractor={(item) => item.id}
+        />
         <TouchableOpacity>
-          <Ionicons name="settings-outline" size={35} color="red" />
+          <Text>Create a new family</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
-        numColumns={2}
-        data={Data}
-        renderItem={renderFlatlist}
-        keyExtractor={(item) => item.id}
-      />
-      <TouchableOpacity>
-        <Text>Create a new family</Text>
-      </TouchableOpacity>
-    </View>
-  )
+    )
+  } else {
+    return <Text>Loading..........</Text>
+  }
 }
 
 const styles = StyleSheet.create({
