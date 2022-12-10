@@ -29,7 +29,7 @@ export default function Registration() {
       'user-email': auth.currentUser.email,
       'user-age': age,
       'user-gender': gender,
-      'user-families': [],
+      'user-families': ['f2'],
     })
   }
 
@@ -39,7 +39,7 @@ export default function Registration() {
         SetUserName()
         setEmail('')
         setPassword('')
-        navigation.navigate('UserScreen')
+        navigation.navigate('FirstPage')
       })
       .catch((err) => console.log(err))
   }

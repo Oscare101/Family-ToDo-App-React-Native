@@ -11,7 +11,8 @@ import auth from './firebase/firebase-config'
 import Registration from './components/Registration'
 import Login from './components/Login'
 import Header from './components/Header'
-import UserScreen from './components/MainNavigation'
+import MainNavigation from './components/MainNavigation'
+import FirstPage from './app/FirstPage'
 
 const Stack = createStackNavigator()
 
@@ -44,8 +45,19 @@ function App() {
         }}
       ></Stack.Screen>
       <Stack.Screen
-        name="UserScreen"
-        component={UserScreen}
+        name="MainNavigation"
+        component={MainNavigation}
+        options={{
+          headerShown: false,
+          // headerTitle: () => <Header name="user" />,
+          // headerStyle: { height: 150, backgroundColor: '#00e4d0' },
+          headerLeft: () => null,
+          cardStyleInterpolator: forFade,
+        }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="FirstPage"
+        component={FirstPage}
         options={{
           headerShown: false,
           // headerTitle: () => <Header name="user" />,

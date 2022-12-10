@@ -26,7 +26,7 @@ export default function Login() {
       .then((re) => {
         setEmail('')
         setPassword('')
-        navigation.navigate('UserScreen')
+        navigation.navigate('MainNavigation')
       })
       .catch((err) => console.log(err))
   }

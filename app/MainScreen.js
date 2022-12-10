@@ -11,7 +11,13 @@ import {
 import { useNavigation } from '@react-navigation/native'
 
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
-import { collection, getDocs, doc, setDoc } from 'firebase/firestore/lite'
+import {
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+  onSnapshot,
+} from 'firebase/firestore/lite'
 import { db } from '../firebase/firebase-config'
 
 const auth = getAuth()
@@ -29,12 +35,63 @@ const Data = [
 
 export default function MainScreen() {
   const navigation = useNavigation()
+  const [userFamilies, setUserFamilies] = useState([])
+  const [name, setName] = useState('')
+  const [list, setList] = useState([])
+
+  useEffect(() => {
+    let family = []
+    const GetUser = async () => {
+      const userCol = collection(db, 'users')
+      const userSnapshot = await getDocs(userCol)
+      const userList = userSnapshot.docs.map((doc) => doc.data())
+
+      userList.map((item) => {
+        // console.log('user map:', item['user-families'])
+        if (item['user-email'] == auth.currentUser.email) {
+          setUserFamilies(item['user-families'])
+          family.push(item['user-families'])
+          // console.log(item['user-families'])
+
+          // console.log('+++', item['user-families'][0])
+        }
+        if (item['user-email'] == auth.currentUser.email) {
+          console.log('user: ', item)
+          setName(item['user-name'])
+        }
+      })
+    }
+    GetUser()
+    console.log(family, userFamilies)
+
+    console.log('family:', family)
+    const GetData = async () => {
+      const userCol = collection(db, 'families')
+      const userSnapshot = await getDocs(userCol)
+      const userList = userSnapshot.docs.map((doc) => doc.data())
+      userList.map((item) => {
+        console.log('map:', family[0], item['family-name'])
+        if (family[0].includes(item['family-name'])) {
+          setList(item.todoList)
+          console.log('item:', item.todoList[0].item)
+        } else {
+        }
+      })
+    }
+    GetData()
+    console.log('list:', list)
+  }, [])
 
   const renderFlatlist = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.flatlistBlock}
-        onPress={() => navigation.navigate('ToDoScreen')}
+        onPress={() =>
+          navigation.navigate('ToDoScreen', {
+            userFamilies: userFamilies,
+            list: list,
+          })
+        }
       >
         <Ionicons name={item.icon} size={40} color="red" />
         <Text>{item.text}</Text>
@@ -46,7 +103,9 @@ export default function MainScreen() {
     <View style={styles.container}>
       <Text>Main</Text>
       <View style={styles.headerBlock}>
-        <TouchableOpacity onPress={() => navigation.navigate('UserScreen')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('UserScreen', { name: name })}
+        >
           <Ionicons name="person-circle-outline" size={35} color="red" />
         </TouchableOpacity>
         <TouchableOpacity>

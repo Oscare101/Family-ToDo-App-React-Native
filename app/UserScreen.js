@@ -7,32 +7,32 @@ import { useNavigation } from '@react-navigation/native'
 
 const auth = getAuth()
 
-export default function UserScreen() {
-  const [name, setName] = useState('')
+export default function UserScreen({ route }) {
+  // const [name, setName] = useState('')
   const navigation = useNavigation()
 
-  useEffect(() => {
-    console.log('useEffect navigation:')
+  // useEffect(() => {
+  //   console.log('useEffect navigation:')
 
-    const GetData = async () => {
-      const userCol = collection(db, 'users')
-      const userSnapshot = await getDocs(userCol)
-      const userList = userSnapshot.docs.map((doc) => doc.data())
+  //   const GetData = async () => {
+  //     const userCol = collection(db, 'users')
+  //     const userSnapshot = await getDocs(userCol)
+  //     const userList = userSnapshot.docs.map((doc) => doc.data())
 
-      userList.map((item) => {
-        if (item['user-email'] == auth.currentUser.email) {
-          console.log('user: ', item)
-          setName(item['user-name'])
-        }
-      })
-    }
-    GetData()
-  }, [])
+  //     userList.map((item) => {
+  //       if (item['user-email'] == auth.currentUser.email) {
+  //         console.log('user: ', item)
+  //         setName(item['user-name'])
+  //       }
+  //     })
+  //   }
+  //   GetData()
+  // }, [])
 
   return (
     <>
       <Text>
-        user:{auth.currentUser.email}, {name}
+        user:{auth.currentUser.email}, {route.params.name}
       </Text>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Text>back</Text>
