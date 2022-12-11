@@ -38,102 +38,110 @@ export default function MainScreen() {
   const [userFamilies, setUserFamilies] = useState([])
   const [name, setName] = useState('')
   const [list, setList] = useState([])
+  const [isLoaded, seIsLoaded] = useState(false)
 
-  useEffect(() => {
-    let family = []
-    const GetUser = async () => {
-      const userCol = collection(db, 'users')
-      const userSnapshot = await getDocs(userCol)
-      //   waitFor(() => {
-      //   expect(getDocs(userCol)).toHaveBeenCalledWith()
-      // }, 10000)
+  // useEffect(() => {
+  //   let family = [] // const for user families list
+  //   let nameConst = '' // const for user name
+  //   let listConst = [] // const for user family list
+  //   const GetUser = async () => {
+  //     const userCol = collection(db, 'users')
+  //     const userSnapshot = await getDocs(userCol)
+  //     //   waitFor(() => {
+  //     //   expect(getDocs(userCol)).toHaveBeenCalledWith()
+  //     // }, 10000)
 
-      const userList = userSnapshot.docs.map((doc) => doc.data())
+  //     const userList = userSnapshot.docs.map((doc) => doc.data())
 
-      userList.map((item) => {
-        // console.log('user map:', item['user-families'])
-        if (item['user-email'] == auth.currentUser.email) {
-          setUserFamilies(item['user-families'])
-          family.push(item['user-families'])
-          // console.log(item['user-families'])
+  //     userList.map((item) => {
+  //       // console.log('user map:', item['user-families'])
+  //       if (item['user-email'] == auth.currentUser.email) {
+  //         // setUserFamilies(item['user-families'])
+  //         family = item['user-families']
+  //       }
+  //       if (item['user-email'] == auth.currentUser.email) {
+  //         console.log('user: ', item)
+  //         // setName(item['user-name'])
+  //         nameConst = item['user-name']
+  //       }
+  //     })
+  //     if ((family.length = 0)) {
+  //       console.log('family length = 0')
+  //       GetUser()
+  //     }
+  //   }
+  //   GetUser()
+  //   console.log(family, userFamilies)
 
-          // console.log('+++', item['user-families'][0])
-        }
-        if (item['user-email'] == auth.currentUser.email) {
-          console.log('user: ', item)
-          setName(item['user-name'])
-        }
-      })
-    }
-    GetUser()
-    console.log(family, userFamilies)
-
-    console.log('family:', family)
-    const GetData = async () => {
-      const userCol = collection(db, 'families')
-      const userSnapshot = await getDocs(userCol)
-      //   waitFor(() => {
-      //   expect(getDocs(userCol)).toHaveBeenCalledWith()
-      // }, 10000)
-      const userList = userSnapshot.docs.map((doc) => doc.data())
-      userList.map((item) => {
-        console.log('map:', family[0], item['family-name'])
-        if (family[0].includes(item['family-name'])) {
-          setList(item.todoList)
-          console.log('item:', item.todoList[0].item)
-        } else {
-        }
-      })
-    }
-    GetData()
-    console.log('list:', list)
-    console.log(!!userFamilies, !!name, !!list)
-  }, [])
+  //   console.log('family:', family)
+  //   const GetData = async () => {
+  //     const userCol = collection(db, 'families')
+  //     const userSnapshot = await getDocs(userCol)
+  //     //   waitFor(() => {
+  //     //   expect(getDocs(userCol)).toHaveBeenCalledWith()
+  //     // }, 10000)
+  //     const userList = userSnapshot.docs.map((doc) => doc.data())
+  //     userList.map((item) => {
+  //       console.log('map:', family, item['family-name'])
+  //       if (family.includes(item['family-name'])) {
+  //         // setList(item.todoList)
+  //         listConst.push(item[item.todoList])
+  //         // console.log('item:', item.todoList[0].item)
+  //       } else {
+  //       }
+  //     })
+  //   }
+  //   GetData()
+  //   console.log('list:', list)
+  //   console.log(!!userFamilies, !!name, !!list)
+  //   console.log(family, nameConst, listConst)
+  // }, [])
 
   const renderFlatlist = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.flatlistBlock}
-        onPress={() =>
-          navigation.navigate('ToDoScreen', {
-            userFamilies: userFamilies,
-            list: list,
-          })
-        }
+        // onPress={() =>
+        //   navigation.navigate('ToDoScreen', {
+        //     userFamilies: userFamilies,
+        //     list: list,
+        //   })
+        // }
+        onPress={() => navigation.navigate('ToDoScreen')}
       >
         <Ionicons name={item.icon} size={40} color="red" />
         <Text>{item.text}</Text>
       </TouchableOpacity>
     )
   }
-  if (!!userFamilies && !!name && !!list) {
-    return (
-      <View style={styles.container}>
-        <Text>Main</Text>
-        <View style={styles.headerBlock}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('UserScreen', { name: name })}
-          >
-            <Ionicons name="person-circle-outline" size={35} color="red" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="settings-outline" size={35} color="red" />
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          numColumns={2}
-          data={Data}
-          renderItem={renderFlatlist}
-          keyExtractor={(item) => item.id}
-        />
+  const Loaded = (
+    <View style={styles.container}>
+      <Text>Main</Text>
+      <View style={styles.headerBlock}>
+        <TouchableOpacity
+          // onPress={() => navigation.navigate('UserScreen', { name: name })}
+          onPress={() => navigation.navigate('UserScreen')}
+        >
+          <Ionicons name="person-circle-outline" size={35} color="red" />
+        </TouchableOpacity>
         <TouchableOpacity>
-          <Text>Create a new family</Text>
+          <Ionicons name="settings-outline" size={35} color="red" />
         </TouchableOpacity>
       </View>
-    )
-  } else {
-    return <Text>Loading..........</Text>
-  }
+      <FlatList
+        numColumns={2}
+        data={Data}
+        renderItem={renderFlatlist}
+        keyExtractor={(item) => item.id}
+      />
+      <TouchableOpacity>
+        <Text>Create a new family</Text>
+      </TouchableOpacity>
+    </View>
+  )
+
+  const Loading = <Text>Loading..........</Text>
+  return isLoaded ? Loading : Loaded
 }
 
 const styles = StyleSheet.create({
