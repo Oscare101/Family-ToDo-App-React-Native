@@ -124,7 +124,7 @@ export default function MainScreen() {
         >
           <Ionicons name="person-circle-outline" size={35} color="red" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('SettingsScreen')}>
           <Ionicons name="settings-outline" size={35} color="red" />
         </TouchableOpacity>
       </View>

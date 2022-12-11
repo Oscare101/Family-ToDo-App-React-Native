@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { collection, getDocs, doc, setDoc } from 'firebase/firestore/lite'
 import { db } from '../firebase/firebase-config'
-
+import { Ionicons } from '@expo/vector-icons'
 const auth = getAuth()
 
 export default function Registration() {
@@ -22,6 +22,8 @@ export default function Registration() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const [isSecure, setIsSecure] = useState(true)
 
   const SetUserName = async () => {
     await setDoc(doc(db, 'users', auth.currentUser.email), {
@@ -68,6 +70,11 @@ export default function Registration() {
             { backgroundColor: gender == 'man' ? 'blue' : 'red' },
           ]}
         >
+          <Ionicons
+            name={gender == 'man' ? 'man-outline' : 'woman-outline'}
+            size={18}
+            color="#000"
+          />
           <Text>{gender}</Text>
         </View>
       </TouchableOpacity>
@@ -77,12 +84,23 @@ export default function Registration() {
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
-      <TextInput
-        placeholder="password"
-        style={styles.input}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
+      <View style={{ width: '100', flexDirection: 'row' }}>
+        <TextInput
+          placeholder="password"
+          style={styles.input}
+          value={password}
+          autoCorrect={false}
+          secureTextEntry={isSecure}
+          onChangeText={(text) => setPassword(text)}
+        />
+        <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
+          <Ionicons
+            name={isSecure ? 'eye-off' : 'eye'}
+            size={24}
+            color="black"
+          />
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity onPress={() => register(email, password)}>
         <View style={styles.buttonSubmit}>
           <Text style={styles.buttonText}>regitraion</Text>
@@ -116,6 +134,9 @@ const styles = StyleSheet.create({
   genderView: {
     padding: 3,
     borderRadius: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonSubmit: {
     marginVertical: 5,
