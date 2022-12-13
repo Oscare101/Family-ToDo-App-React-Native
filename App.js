@@ -29,19 +29,21 @@ function App() {
         name="Login"
         component={Login}
         options={{
-          headerTitle: () => <Header name="login" />,
-          headerStyle: { height: 150, backgroundColor: 'orange' },
+          // headerTitle: () => <Header name="login" />,
+          // headerStyle: { height: 150, backgroundColor: 'orange' },
           cardStyleInterpolator: forFade,
+          headerShown: false,
         }}
       ></Stack.Screen>
       <Stack.Screen
         name="Registration"
         component={Registration}
         options={{
-          headerTitle: () => <Header name="registration" />,
-          headerStyle: { height: 150, backgroundColor: '#00e4d0' },
+          // headerTitle: () => <Header name="registration" />,
+          // headerStyle: { height: 150, backgroundColor: '#00e4d0' },
           headerLeft: () => null,
           cardStyleInterpolator: forFade,
+          headerShown: false,
         }}
       ></Stack.Screen>
       <Stack.Screen
@@ -53,6 +55,7 @@ function App() {
           // headerStyle: { height: 150, backgroundColor: '#00e4d0' },
           headerLeft: () => null,
           cardStyleInterpolator: forFade,
+          headerShown: false,
         }}
       ></Stack.Screen>
       <Stack.Screen
@@ -64,6 +67,7 @@ function App() {
           // headerStyle: { height: 150, backgroundColor: '#00e4d0' },
           headerLeft: () => null,
           cardStyleInterpolator: forFade,
+          headerShown: false,
         }}
       ></Stack.Screen>
     </Stack.Navigator>
