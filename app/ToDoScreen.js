@@ -22,14 +22,6 @@ export default function ToDoScreen({ route }) {
   useEffect(() => {
     let family = []
 
-    function wait(ms) {
-      var start = new Date().getTime()
-      var end = start
-      while (end < start + ms) {
-        end = new Date().getTime()
-      }
-    }
-
     const GetUser = async () => {
       const userCol = collection(db, 'users')
       const userSnapshot = await getDocs(userCol)

@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    width: '100',
+    width: '100%',
     height: 30,
     flexDirection: 'row',
     paddingHorizontal: 5,

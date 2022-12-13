@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  StatusBar,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
@@ -30,7 +31,7 @@ const Data = [
     screen: 'ToDoScreen',
   },
   { id: 3, text: 'Plans', icon: 'calendar-outline', screen: 'ToDoScreen' },
-  { id: 4, text: 'Family', icon: 'people-outline', screen: 'UserScreen' },
+  { id: 4, text: 'Family', icon: 'people-outline', screen: 'FamilyScreen' },
 ]
 
 export default function MainScreen() {
@@ -107,7 +108,7 @@ export default function MainScreen() {
         //     list: list,
         //   })
         // }
-        onPress={() => navigation.navigate('ToDoScreen')}
+        onPress={() => navigation.navigate(item.screen)}
       >
         <Ionicons name={item.icon} size={40} color="red" />
         <Text>{item.text}</Text>
@@ -116,6 +117,7 @@ export default function MainScreen() {
   }
   const Loaded = (
     <View style={styles.container}>
+      <StatusBar />
       <Text>Main</Text>
       <View style={styles.headerBlock}>
         <TouchableOpacity
@@ -134,9 +136,6 @@ export default function MainScreen() {
         renderItem={renderFlatlist}
         keyExtractor={(item) => item.id}
       />
-      <TouchableOpacity>
-        <Text>Create a new family</Text>
-      </TouchableOpacity>
     </View>
   )
 

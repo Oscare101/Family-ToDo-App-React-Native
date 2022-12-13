@@ -7,6 +7,7 @@ import MainScreen from '../app/MainScreen'
 import SettingsScreen from '../app/SettingsScreen'
 
 import { createStackNavigator } from '@react-navigation/stack'
+import FamilyScreen from '../app/FamilyScreen'
 
 const Stack = createStackNavigator()
 
@@ -48,6 +49,15 @@ export default function MainNavigation() {
       <Stack.Screen
         name="SettingsScreen"
         component={SettingsScreen}
+        options={{
+          headerShown: false,
+          headerLeft: () => null,
+          cardStyleInterpolator: forFade,
+        }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="FamilyScreen"
+        component={FamilyScreen}
         options={{
           headerShown: false,
           headerLeft: () => null,

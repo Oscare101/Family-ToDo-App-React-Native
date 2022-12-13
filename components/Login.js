@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   input: {
-    width: '100',
+    width: '100%',
     height: 30,
     flexDirection: 'row',
     paddingHorizontal: 5,
@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     alignItems: 'center',
     justifyContent: 'space-between',
-    elevation: 5,
     backgroundColor: '#fff',
   },
   inputLine: {
@@ -138,7 +137,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5,
   },
   buttonChange: {
     marginVertical: 5,
@@ -150,7 +148,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 5,
   },
   buttonText: {},
 })
