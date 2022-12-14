@@ -118,7 +118,6 @@ export default function MainScreen() {
   const Loaded = (
     <View style={styles.container}>
       <StatusBar />
-      <Text>Main</Text>
       <View style={styles.headerBlock}>
         <TouchableOpacity
           // onPress={() => navigation.navigate('UserScreen', { name: name })}
@@ -147,6 +146,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f8f8',
+    paddingTop: 20,
   },
   headerBlock: {
     width: '100%',

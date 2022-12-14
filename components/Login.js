@@ -58,7 +58,10 @@ export default function Login() {
             secureTextEntry={isSecure}
             onChangeText={(text) => setPassword(text)}
           />
-          <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
+          <TouchableOpacity
+            style={{ position: 'absolute', right: 5 }}
+            onPress={() => setIsSecure(!isSecure)}
+          >
             <Ionicons
               name={isSecure ? 'eye-off' : 'eye'}
               size={24}

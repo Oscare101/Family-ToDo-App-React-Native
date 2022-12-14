@@ -34,7 +34,8 @@ export default function Registration() {
       'user-email': auth.currentUser.email,
       'user-age': age,
       'user-gender': gender,
-      'user-families': ['f3'],
+      'user-families': ['f2', 'f3'],
+      'user-current-family': 'f2',
     })
   }
 
@@ -107,7 +108,10 @@ export default function Registration() {
             secureTextEntry={isSecure}
             onChangeText={(text) => setPassword(text)}
           />
-          <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
+          <TouchableOpacity
+            style={{ position: 'absolute', right: 5 }}
+            onPress={() => setIsSecure(!isSecure)}
+          >
             <Ionicons
               name={isSecure ? 'eye-off' : 'eye'}
               size={24}
