@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
+
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import {
   collection,
@@ -21,7 +22,7 @@ import { db } from '../firebase/firebase-config'
 
 const auth = getAuth()
 
-export default function ToDoScreen({ route }) {
+export default function ToDoScreen() {
   const navigation = useNavigation()
   const [userCurrentFamily, setUserCurrentFamily] = useState('')
   const [list, setList] = useState([])
@@ -33,61 +34,24 @@ export default function ToDoScreen({ route }) {
     const GetUser = async () => {
       const userCol = collection(db, 'users')
       const userSnapshot = await getDocs(userCol)
-      // wait(1000)
       const userList = userSnapshot.docs.map((doc) => doc.data())
-
       userList.map((item) => {
-        // console.log('user map:', item['user-families'])
         if (item['user-email'] == auth.currentUser.email) {
           setUserCurrentFamily(item['user-current-family'])
           family = item['user-current-family']
-          console.log('family is done')
-
-          // console.log(item['user-families'])
-
-          // console.log('+++', item['user-families'][0])
         }
       })
-      // GetData()
       const userColF = collection(db, 'families')
       const userSnapshotF = await getDocs(userColF)
-      // wait(1000)
       const userListF = userSnapshotF.docs.map((doc) => doc.data())
       userListF.map((item) => {
-        console.log('map:', family, item['family-name'])
         if (family == item['family-name']) {
           setList(item.todoList)
-          console.log('list is done')
         } else {
         }
       })
     }
     GetUser()
-    console.log(family, userCurrentFamily)
-
-    console.log('family:', family)
-
-    // db.collection('families')
-    //   .doc(userCurrentFamily)
-    //   .onSnapshot((doc) => {
-    //     console.log(doc.data())
-    //   })
-
-    // const GetData = async () => {
-    //   const userCol = collection(db, 'families')
-    //   const userSnapshot = await getDocs(userCol)
-    //   wait(1000)
-    //   const userList = userSnapshot.docs.map((doc) => doc.data())
-    //   userList.map((item) => {
-    //     console.log('map:', family[0], item['family-name'])
-    //     if (family[0].includes(item['family-name'])) {
-    //       setList(item.todoList)
-    //       console.log('list is done')
-    //     } else {
-    //     }
-    //   })
-    // }
-    // GetData()
   }, [])
 
   const setDBList = async (item) => {
@@ -109,14 +73,11 @@ export default function ToDoScreen({ route }) {
         style={styles.listView}
         onPress={() => {
           list[index].isActive = !list[index].isActive
-          // let letList = list
-
           setDBList(list)
           console.log(list)
         }}
         onLongPress={() => {
           list.splice(index, 1)
-
           setDBList(list)
         }}
       >

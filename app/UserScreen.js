@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { Ionicons } from '@expo/vector-icons'
+import { Text, TouchableOpacity, View, StyleSheet } from 'react-native'
+
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import { collection, getDocs, doc, setDoc } from 'firebase/firestore/lite'
 import { db } from '../firebase/firebase-config'
-import { Text, TouchableOpacity, View, StyleSheet } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 const auth = getAuth()
 
 export default function UserScreen({ route }) {
-  const [name, setName] = useState('')
+  const [user, setUser] = useState('')
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -19,8 +21,7 @@ export default function UserScreen({ route }) {
 
       userList.map((item) => {
         if (item['user-email'] == auth.currentUser.email) {
-          console.log('user: ', item)
-          setName(item['user-name'])
+          setUser(item)
         }
       })
     }
@@ -29,9 +30,21 @@ export default function UserScreen({ route }) {
 
   return (
     <View style={styles.container}>
-      <Text>
-        user:{auth.currentUser.email}, {name}
-      </Text>
+      <View>
+        <View style={{ flexDirection: 'row' }}>
+          <Ionicons name="person-outline" size={40} color="black" />
+          <Text>
+            {auth.currentUser.email}, {user['user-name']}
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <Ionicons name="people-outline" size={40} color="black" />
+          <Text>
+            {auth.currentUser.email}, {user['user-families']}
+          </Text>
+        </View>
+      </View>
+
       <TouchableOpacity
         style={styles.buttonBack}
         onPress={() => navigation.goBack()}

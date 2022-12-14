@@ -43,10 +43,12 @@ export default function FamilyScreen() {
     <View style={styles.container}>
       <View>
         <Text style={styles.title}>Family</Text>
+
         <Text>user:{auth.currentUser.email}</Text>
         <Text>your family is</Text>
         <Text style={styles.familyTitle}> {currentfamily}</Text>
         <Text>List of available families:</Text>
+
         {families.map((item, index) => (
           <TouchableOpacity
             key={index}
