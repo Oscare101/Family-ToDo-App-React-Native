@@ -24,9 +24,9 @@ const auth = getAuth()
 
 export default function ToDoScreen() {
   const navigation = useNavigation()
-  const [userCurrentFamily, setUserCurrentFamily] = useState('')
-  const [list, setList] = useState([])
-  const [item, setItem] = useState('')
+  const [user, setUser] = useState('')
+  const [chatList, setChatList] = useState([])
+  const [text, setText] = useState('')
   useEffect(() => {
     let family = []
 
@@ -36,16 +36,16 @@ export default function ToDoScreen() {
       const userList = userSnapshot.docs.map((doc) => doc.data())
       userList.map((item) => {
         if (item['user-email'] == auth.currentUser.email) {
-          setUserCurrentFamily(item['user-current-family'])
+          setUser(item)
           family = item['user-current-family']
         }
       })
-      const userColF = collection(db, 'families')
+      const userColF = collection(db, 'chats')
       const userSnapshotF = await getDocs(userColF)
-      const userListF = userSnapshotF.docs.map((doc) => doc.data())
-      userListF.map((item) => {
+      const chatListF = userSnapshotF.docs.map((doc) => doc.data())
+      chatListF.map((item) => {
         if (family == item['family-name']) {
-          setList(item.todoList)
+          setChatList(item.chat)
         } else {
         }
       })
@@ -53,55 +53,37 @@ export default function ToDoScreen() {
     GetUser()
   }, [])
 
-  const setDBList = async (item) => {
-    setList([])
-    setList([...item])
+  const setDBChat = async (chatArr) => {
     await setDoc(
-      doc(db, 'families', userCurrentFamily),
+      doc(db, 'chats', user['user-current-family']),
       {
-        'family-name': userCurrentFamily,
-        todoList: item,
+        chat: chatArr,
       },
       { merge: true }
     )
   }
 
-  function ListRender({ item, index }) {
-    return (
-      <TouchableOpacity
-        style={styles.listView}
-        onPress={() => {
-          list[index].isActive = !list[index].isActive
-          setDBList(list)
-        }}
-        onLongPress={() => {
-          list.splice(index, 1)
-          setDBList(list)
-        }}
-      >
-        <Ionicons
-          name="checkbox-outline"
-          size={24}
-          color={item.isActive ? '#eeeeee00' : '#333'}
-        />
-        <Text
-          style={[
-            styles.listText,
-            { textDecorationLine: item.isActive ? 'none' : 'line-through' },
-          ]}
-        >
-          {item.item}
-        </Text>
-      </TouchableOpacity>
-    )
+  const RenderText = ({ item }) => {
+    if (item['author-email'] == auth.currentUser.email) {
+      return (
+        <View style={styles.myTextView}>
+          <Text style={styles.myText}>{item.text}</Text>
+        </View>
+      )
+    } else {
+      return (
+        <View style={styles.otherTextView}>
+          <Text style={styles.otherText}>{item.text}</Text>
+        </View>
+      )
+    }
   }
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.headerText}>-----To Do Screen-----</Text>
-        {list.map((item, index) => (
-          <ListRender item={item} index={index} key={index} />
+      <View style={styles.chatView}>
+        {chatList.map((item, index) => (
+          <RenderText key={index} item={item} />
         ))}
       </View>
       <View>
@@ -109,26 +91,26 @@ export default function ToDoScreen() {
           <TextInput
             placeholder="item"
             style={styles.inputLine}
-            value={item}
-            onChangeText={(text) => setItem(text)}
+            value={text}
+            onChangeText={(text) => setText(text)}
           />
         </View>
         <TouchableOpacity
-          style={styles.buttonAdd}
           onPress={() => {
-            if (item) {
-              setDBList([...list, { item: item, isActive: true }])
-              setItem('')
+            if (text) {
+              setDBChat([
+                ...chatList,
+                {
+                  text: text,
+                  'author-email': auth.currentUser.email,
+                  'author-name': user['user-name'],
+                },
+              ])
+              setText('')
             }
           }}
         >
           <Text>Add new task</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.buttonBack}
-          onPress={() => navigation.goBack()}
-        >
-          <Text>Back</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -145,6 +127,32 @@ const styles = StyleSheet.create({
   },
   headerText: {
     alignSelf: 'center',
+  },
+  chatView: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
+  myTextView: {
+    width: '80%',
+    padding: 5,
+    borderRadius: 5,
+    left: '20%',
+    backgroundColor: '#cce2e6',
+    margin: 5,
+  },
+  myText: {
+    fontSize: 20,
+  },
+  otherTextView: {
+    width: '80%',
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor: '#e2cce6',
+    margin: 5,
+  },
+  otherText: {
+    fontSize: 20,
   },
   listView: {
     width: '100%',
@@ -174,27 +182,5 @@ const styles = StyleSheet.create({
   inputLine: {
     width: '100%',
     height: 30,
-  },
-  buttonAdd: {
-    marginVertical: 5,
-    padding: 5,
-    backgroundColor: '#0088ee',
-    borderRadius: 5,
-    width: '100%',
-    height: 30,
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonBack: {
-    marginVertical: 5,
-    padding: 5,
-    backgroundColor: 'red',
-    borderRadius: 5,
-    width: '100%',
-    height: 30,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 })

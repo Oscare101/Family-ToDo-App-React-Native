@@ -21,25 +21,24 @@ import {
 } from 'firebase/firestore/lite'
 import { db } from '../firebase/firebase-config'
 
-const auth = getAuth()
-const Data = [
-  { id: 1, text: 'ToDo', icon: 'list', screen: 'ToDoScreen' },
-  {
-    id: 2,
-    text: 'Chat',
-    icon: 'chatbox-ellipses-outline',
-    screen: 'ToDoScreen',
-  },
-  { id: 3, text: 'Plans', icon: 'calendar-outline', screen: 'ToDoScreen' },
-  { id: 4, text: 'Family', icon: 'people-outline', screen: 'FamilyScreen' },
-]
-
 export default function MainScreen() {
   const navigation = useNavigation()
   const [userFamilies, setUserFamilies] = useState([])
   const [name, setName] = useState('')
   const [list, setList] = useState([])
   const [isLoaded, seIsLoaded] = useState(false)
+
+  const Data = [
+    { id: 1, text: 'ToDo', icon: 'list', screen: 'ToDoScreen' },
+    {
+      id: 2,
+      text: 'Chat',
+      icon: 'chatbox-ellipses-outline',
+      screen: 'ChatScreen',
+    },
+    { id: 3, text: 'Plans', icon: 'calendar-outline', screen: 'ToDoScreen' },
+    { id: 4, text: 'Family', icon: 'people-outline', screen: 'FamilyScreen' },
+  ]
 
   // useEffect(() => {
   //   let family = [] // const for user families list
@@ -115,7 +114,7 @@ export default function MainScreen() {
       </TouchableOpacity>
     )
   }
-  const Loaded = (
+  return (
     <View style={styles.container}>
       <StatusBar />
       <View style={styles.headerBlock}>
@@ -137,9 +136,6 @@ export default function MainScreen() {
       />
     </View>
   )
-
-  const Loading = <Text>Loading..........</Text>
-  return isLoaded ? Loading : Loaded
 }
 
 const styles = StyleSheet.create({

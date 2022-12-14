@@ -5,6 +5,7 @@ import UserScreen from '../app/UserScreen'
 import ToDoScreen from '../app/ToDoScreen'
 import MainScreen from '../app/MainScreen'
 import SettingsScreen from '../app/SettingsScreen'
+import ChatScreen from '../app/ChatScreen'
 
 import { createStackNavigator } from '@react-navigation/stack'
 import FamilyScreen from '../app/FamilyScreen'
@@ -58,6 +59,15 @@ export default function MainNavigation() {
       <Stack.Screen
         name="FamilyScreen"
         component={FamilyScreen}
+        options={{
+          headerShown: false,
+          headerLeft: () => null,
+          cardStyleInterpolator: forFade,
+        }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="ChatScreen"
+        component={ChatScreen}
         options={{
           headerShown: false,
           headerLeft: () => null,
