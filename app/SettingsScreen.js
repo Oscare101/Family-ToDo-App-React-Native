@@ -1,5 +1,27 @@
-import { Text, TouchableOpacity, View, StyleSheet } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
+  Dimensions,
+} from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { Ionicons, FontAwesome, AntDesign } from '@expo/vector-icons'
+
+const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
+
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
+import { getDocs, doc, setDoc, collection } from 'firebase/firestore/lite'
+import { onSnapshot } from 'firebase/firestore'
+import { db } from '../firebase/firebase-config'
+
+const auth = getAuth()
 
 export default function SettingsScreen() {
   const navigation = useNavigation()
