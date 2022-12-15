@@ -8,8 +8,10 @@ import {
   TouchableOpacity,
   FlatList,
   StatusBar,
+  Dimensions,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { EvilIcons } from '@expo/vector-icons'
 
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import {
@@ -20,6 +22,9 @@ import {
   onSnapshot,
 } from 'firebase/firestore/lite'
 import { db } from '../firebase/firebase-config'
+
+const height = Dimensions.get('window').height
+const width = Dimensions.get('window').width
 
 export default function MainScreen() {
   const navigation = useNavigation()
@@ -114,10 +119,27 @@ export default function MainScreen() {
       </TouchableOpacity>
     )
   }
+
   return (
     <View style={styles.container}>
       <StatusBar />
       <View style={styles.headerBlock}>
+        <TouchableOpacity activeOpacity={1}>
+          <View style={styles.personalButtonView}>
+            <View style={styles.personalButtonViewLeft} />
+            <View style={styles.personalButtonViewBottom} />
+            <View style={styles.personalButtonViewLittleBlock} />
+            <View style={styles.personalButtonViewCorner} />
+            <View style={styles.personalButtonViewCircle}>
+              <EvilIcons name="pencil" size={24} color="black" />
+            </View>
+            <View style={styles.personalButtonViewTextView}>
+              <Text style={styles.personalButtonViewTitle}>21</Text>
+              <Text style={styles.personalButtonViewText}>tasks left</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
         <TouchableOpacity
           // onPress={() => navigation.navigate('UserScreen', { name: name })}
           onPress={() => navigation.navigate('UserScreen')}
@@ -141,17 +163,89 @@ export default function MainScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#FDE8C9',
     paddingTop: 20,
   },
   headerBlock: {
     width: '100%',
+    height: height * 0.5,
     padding: 10,
     paddingHorizontal: 25,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+
+  // inside header
+  personalButtonView: {
+    width: width * 0.3,
+    height: width * 0.25,
+    backgroundColor: '#FDE8C9',
+  },
+  personalButtonViewLeft: {
+    height: '100%',
+    width: width * 0.3 - width * 0.3 * 0.25,
+    backgroundColor: '#000',
+    borderRadius: 25,
+    borderTopEndRadius: width * 0.3 * 0.25 * 0.5,
+    position: 'absolute',
+    left: 0,
+  },
+  personalButtonViewBottom: {
+    height: width * 0.25 - width * 0.3 * 0.25,
+    width: '100%',
+    backgroundColor: '#000',
+    borderRadius: 25,
+    borderTopEndRadius: width * 0.3 * 0.25 * 0.5,
+    position: 'absolute',
+    bottom: 0,
+  },
+  personalButtonViewLittleBlock: {
+    width: width * 0.3 * 0.25 * 0.5,
+    height: width * 0.3 * 0.25 * 0.5,
+    position: 'absolute',
+    top: width * 0.3 * 0.25 * 0.5,
+    right: width * 0.3 * 0.25 * 0.5,
+    backgroundColor: '#000',
+  },
+  personalButtonViewCorner: {
+    width: width * 0.3 * 0.25,
+    height: width * 0.3 * 0.25,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: '#FDE8C9',
+    borderRadius: width * 0.3 * 0.25 * 0.5,
+  },
+  personalButtonViewCircle: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    width: width * 0.3 * 0.25,
+    height: width * 0.3 * 0.25,
+    borderWidth: 1,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  personalButtonViewTextView: {
+    width: '100%',
+    height: '100%',
+    padding: 18,
+    paddingTop: 10,
+    paddingLeft: 25,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  personalButtonViewTitle: {
+    color: '#fffdfc',
+    fontSize: 35,
+  },
+  personalButtonViewText: {
+    color: '#fffdfc',
+    fontSize: 16,
+  },
+  // body
   flatlistBlock: {
     width: '50%',
     height: 150,
