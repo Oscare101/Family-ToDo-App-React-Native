@@ -126,7 +126,7 @@ export default function ToDoScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.buttonBack}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate('MainScreen')}
         >
           <Text>Back</Text>
         </TouchableOpacity>

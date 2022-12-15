@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { Ionicons } from '@expo/vector-icons'
 import {
   Button,
   StyleSheet,
@@ -11,112 +10,139 @@ import {
   Dimensions,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { EvilIcons } from '@expo/vector-icons'
-
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
-import {
-  collection,
-  getDocs,
-  doc,
-  setDoc,
-  onSnapshot,
-} from 'firebase/firestore/lite'
-import { db } from '../firebase/firebase-config'
+import { EvilIcons, Ionicons } from '@expo/vector-icons'
 
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
 export default function MainScreen() {
   const navigation = useNavigation()
-  const [userFamilies, setUserFamilies] = useState([])
-  const [name, setName] = useState('')
-  const [list, setList] = useState([])
-  const [isLoaded, seIsLoaded] = useState(false)
 
   const Data = [
-    { id: 1, text: 'ToDo', icon: 'list', screen: 'ToDoScreen' },
+    {
+      id: 1,
+      title: 'Family',
+      text: 'manage your family or even start a new one',
+      icon: 'people-outline',
+      screen: 'FamilyScreen',
+      color: '#DEECED',
+    },
     {
       id: 2,
-      text: 'Chat',
-      icon: 'chatbox-ellipses-outline',
-      screen: 'ChatScreen',
+      title: 'Goals',
+      text: 'set long-term and big goals',
+      icon: 'bookmarks-outline',
+      screen: '',
+      color: '#DDD2FD',
     },
-    { id: 3, text: 'Plans', icon: 'calendar-outline', screen: 'ToDoScreen' },
-    { id: 4, text: 'Family', icon: 'people-outline', screen: 'FamilyScreen' },
+    {
+      id: 3,
+      title: 'Finance',
+      text: 'manage family expenses and income',
+      icon: 'cash-outline',
+      screen: '',
+      color: '#C3DEC1',
+    },
   ]
 
   // useEffect(() => {
-  //   let family = [] // const for user families list
-  //   let nameConst = '' // const for user name
-  //   let listConst = [] // const for user family list
-  //   const GetUser = async () => {
-  //     const userCol = collection(db, 'users')
-  //     const userSnapshot = await getDocs(userCol)
-  //     //   waitFor(() => {
-  //     //   expect(getDocs(userCol)).toHaveBeenCalledWith()
-  //     // }, 10000)
 
-  //     const userList = userSnapshot.docs.map((doc) => doc.data())
-
-  //     userList.map((item) => {
-  //       // console.log('user map:', item['user-families'])
-  //       if (item['user-email'] == auth.currentUser.email) {
-  //         // setUserFamilies(item['user-families'])
-  //         family = item['user-families']
-  //       }
-  //       if (item['user-email'] == auth.currentUser.email) {
-  //         console.log('user: ', item)
-  //         // setName(item['user-name'])
-  //         nameConst = item['user-name']
-  //       }
-  //     })
-  //     if ((family.length = 0)) {
-  //       console.log('family length = 0')
-  //       GetUser()
-  //     }
-  //   }
-  //   GetUser()
-  //   console.log(family, userFamilies)
-
-  //   console.log('family:', family)
-  //   const GetData = async () => {
-  //     const userCol = collection(db, 'families')
-  //     const userSnapshot = await getDocs(userCol)
-  //     //   waitFor(() => {
-  //     //   expect(getDocs(userCol)).toHaveBeenCalledWith()
-  //     // }, 10000)
-  //     const userList = userSnapshot.docs.map((doc) => doc.data())
-  //     userList.map((item) => {
-  //       console.log('map:', family, item['family-name'])
-  //       if (family.includes(item['family-name'])) {
-  //         // setList(item.todoList)
-  //         listConst.push(item[item.todoList])
-  //         // console.log('item:', item.todoList[0].item)
-  //       } else {
-  //       }
-  //     })
-  //   }
-  //   GetData()
-  //   console.log('list:', list)
-  //   console.log(!!userFamilies, !!name, !!list)
-  //   console.log(family, nameConst, listConst)
   // }, [])
 
   const renderFlatlist = ({ item }) => {
     return (
-      <TouchableOpacity
-        style={styles.flatlistBlock}
-        // onPress={() =>
-        //   navigation.navigate('ToDoScreen', {
-        //     userFamilies: userFamilies,
-        //     list: list,
-        //   })
-        // }
-        onPress={() => navigation.navigate(item.screen)}
-      >
-        <Ionicons name={item.icon} size={40} color="red" />
-        <Text>{item.text}</Text>
-      </TouchableOpacity>
+      <>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.flatlistBlock}
+          onPress={() => navigation.navigate(item.screen)}
+        >
+          <View
+            style={[styles.flatlistBlockIcon, { backgroundColor: item.color }]}
+          >
+            <Ionicons name={item.icon} size={40} color="#000" />
+          </View>
+          <View style={styles.flatlistBlockText}>
+            <Text style={styles.flatlistTitle}>{item.title}</Text>
+            <Text style={styles.flatlistText}>{item.text}</Text>
+          </View>
+        </TouchableOpacity>
+        <View
+          style={{
+            backgroundColor: '#D5D5D5',
+            width: '80%',
+            height: 1,
+            alignSelf: 'center',
+          }}
+        />
+      </>
+    )
+  }
+
+  function ContentDate() {
+    const date = new Date()
+    let month = ''
+    switch (date.getMonth()) {
+      case 1:
+        month = 'January'
+        break
+      case 2:
+        month = 'February'
+        break
+      case 3:
+        month = 'March'
+        break
+      case 4:
+        month = 'April'
+        break
+      case 5:
+        month = 'May'
+        break
+      case 6:
+        month = 'June'
+        break
+      case 7:
+        month = 'July'
+        break
+      case 8:
+        month = 'August'
+        break
+      case 9:
+        month = 'September'
+        break
+      case 10:
+        month = 'October'
+        break
+      case 11:
+        month = 'November'
+        break
+      case 12:
+        month = 'December'
+        break
+    }
+
+    let day = ''
+    switch (date.getDate() % 10) {
+      case 1:
+        day = 'st'
+        break
+      case 2:
+        day = 'nd'
+        break
+      case 3:
+        day = 'rd'
+        break
+      default:
+        day = 'th'
+        break
+    }
+    if (date.getDate() > 3 && date.getDate() < 21) day = 'th'
+
+    return (
+      <Text style={{ color: '#9D907E' }}>
+        {month} {date.getDate()}
+        {day} ,{date.getFullYear()}
+      </Text>
     )
   }
 
@@ -124,43 +150,65 @@ export default function MainScreen() {
     <View style={styles.container}>
       <StatusBar />
       <View style={styles.headerBlock}>
-        <TouchableOpacity activeOpacity={1}>
-          <View style={styles.personalButtonView}>
-            <View style={styles.personalButtonViewLeft} />
-            <View style={styles.personalButtonViewBottom} />
-            <View style={styles.personalButtonViewLittleBlock} />
-            <View style={styles.personalButtonViewCorner} />
-            <View style={styles.personalButtonViewCircle}>
-              <EvilIcons name="pencil" size={24} color="black" />
-              {/* <Ionicons
-                name="person-circle-outline"
-                size={width * 0.3 * 0.25 + 2}
-                color="#000"
-              /> */}
+        <View style={styles.headerTexts}>
+          <Text style={styles.headerTextsTitle}>Your Task Manager</Text>
+          <ContentDate />
+        </View>
+        <View style={styles.headerPersonalTodoBlock}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => navigation.navigate('UserScreen')}
+          >
+            <View style={styles.personalButtonView}>
+              <View style={styles.personalButtonViewLeft} />
+              <View style={styles.personalButtonViewBottom} />
+              <View style={styles.personalButtonViewLittleBlock} />
+              <View style={styles.personalButtonViewCorner} />
+              <View style={styles.personalButtonViewCircle}>
+                <EvilIcons name="pencil" size={24} color="black" />
+              </View>
+              <View style={styles.personalButtonViewTextView}>
+                <Text style={styles.personalButtonViewTitle}>21</Text>
+                <Text style={styles.personalButtonViewText}>tasks left</Text>
+              </View>
             </View>
-            <View style={styles.personalButtonViewTextView}>
-              <Text style={styles.personalButtonViewTitle}>21</Text>
-              <Text style={styles.personalButtonViewText}>tasks left</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => navigation.navigate('ChatScreen')}
+          >
+            <View style={styles.toDoButtonView}>
+              <View style={styles.toDoButtonViewWithText}>
+                <Text style={styles.toDoButtonViewWithTextText}>
+                  Discuss your goals with others
+                </Text>
+              </View>
+              <View style={styles.toDoButtonViewOpen}>
+                <View style={styles.toDoButtonViewOpenIcon}>
+                  <Ionicons name="newspaper-outline" size={24} color="#fff" />
+                </View>
+                <Text style={styles.toDoButtonViewOpenText}>chat</Text>
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
 
-        <TouchableOpacity
-          // onPress={() => navigation.navigate('UserScreen', { name: name })}
-          onPress={() => navigation.navigate('UserScreen')}
-        >
+        {/* <TouchableOpacity onPress={() => navigation.navigate('UserScreen')}>
           <Ionicons name="person-circle-outline" size={35} color="red" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('SettingsScreen')}>
+        </TouchableOpacity> */}
+
+        {/* <TouchableOpacity onPress={() => navigation.navigate('SettingsScreen')}>
           <Ionicons name="settings-outline" size={35} color="red" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
-      <FlatList
-        numColumns={2}
-        data={Data}
-        renderItem={renderFlatlist}
-        keyExtractor={(item) => item.id}
-      />
+      <View style={styles.flatListView}>
+        <FlatList
+          numColumns={1}
+          data={Data}
+          renderItem={renderFlatlist}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
     </View>
   )
 }
@@ -174,62 +222,75 @@ const styles = StyleSheet.create({
   headerBlock: {
     width: '100%',
     height: height * 0.5,
-    padding: 10,
-    paddingHorizontal: 25,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    padding: 0,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
 
   // inside header
+  headerPersonalTodoBlock: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+
+  headerTexts: {
+    width: '100%',
+    padding: 20,
+    alignItems: 'flex-start',
+  },
+  headerTextsTitle: {
+    fontSize: 40,
+  },
 
   // button with person
   personalButtonView: {
-    width: width * 0.3,
+    width: width * 0.35,
     height: width * 0.25,
     backgroundColor: '#FDE8C9',
   },
   personalButtonViewLeft: {
     height: '100%',
-    width: width * 0.3 - width * 0.3 * 0.25,
+    width: width * 0.35 - width * 0.35 * 0.25,
     backgroundColor: '#000',
     borderRadius: 25,
-    borderTopEndRadius: width * 0.3 * 0.25 * 0.5,
+    borderTopEndRadius: width * 0.35 * 0.25 * 0.5,
     position: 'absolute',
     left: 0,
   },
   personalButtonViewBottom: {
-    height: width * 0.25 - width * 0.3 * 0.25,
+    height: width * 0.25 - width * 0.35 * 0.25,
     width: '100%',
     backgroundColor: '#000',
     borderRadius: 25,
-    borderTopEndRadius: width * 0.3 * 0.25 * 0.5,
+    borderTopEndRadius: width * 0.35 * 0.25 * 0.5,
     position: 'absolute',
     bottom: 0,
   },
   personalButtonViewLittleBlock: {
-    width: width * 0.3 * 0.25 * 0.5,
-    height: width * 0.3 * 0.25 * 0.5,
+    width: width * 0.35 * 0.25,
+    height: width * 0.35 * 0.25,
     position: 'absolute',
-    top: width * 0.3 * 0.25 * 0.5,
-    right: width * 0.3 * 0.25 * 0.5,
+    top: width * 0.35 * 0.25 * 0.5,
+    right: width * 0.35 * 0.25 * 0.5,
     backgroundColor: '#000',
   },
   personalButtonViewCorner: {
-    width: width * 0.3 * 0.25,
-    height: width * 0.3 * 0.25,
+    width: width * 0.35 * 0.25,
+    height: width * 0.35 * 0.25,
     position: 'absolute',
     top: 0,
     right: 0,
     backgroundColor: '#FDE8C9',
-    borderRadius: width * 0.3 * 0.25 * 0.5,
+    borderRadius: width * 0.35 * 0.25 * 0.5,
   },
   personalButtonViewCircle: {
     position: 'absolute',
     top: -4,
     right: -4,
-    width: width * 0.3 * 0.25,
-    height: width * 0.3 * 0.25,
+    width: width * 0.35 * 0.25,
+    height: width * 0.35 * 0.25,
     borderWidth: 1,
     borderRadius: 100,
     alignItems: 'center',
@@ -252,15 +313,81 @@ const styles = StyleSheet.create({
     color: '#fffdfc',
     fontSize: 16,
   },
-  // body
-  flatlistBlock: {
+  // ToDo Button View
+
+  toDoButtonView: {
+    width: width * 0.55,
+    height: width * 0.25,
+    borderWidth: 2,
+    borderColor: '#B5A691',
+    borderRadius: 25,
+  },
+  toDoButtonViewWithText: {
     width: '50%',
-    height: 150,
-    borderColor: '#f8f8f8',
-    borderWidth: 1,
-    borderStyle: 'solid',
+    height: '100%',
+    padding: 10,
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  toDoButtonViewWithTextText: {
+    fontSize: 14,
+  },
+  toDoButtonViewOpen: {
+    height: width * 0.25,
+    width: '50%',
+    position: 'absolute',
+    right: -2,
+    top: -2,
+    borderWidth: 2,
+    borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ffffff',
   },
+
+  toDoButtonViewOpenIcon: {
+    width: '50%',
+    height: '50%',
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#000',
+  },
+  toDoButtonViewOpenText: {
+    fontSize: 16,
+    letterSpacing: 1,
+  },
+
+  //////////////////
+  flatListView: {
+    flex: 1,
+    borderTopRightRadius: 50,
+    borderTopLeftRadius: 50,
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+  },
+  flatlistBlock: {
+    width: '100%',
+    height: 150,
+
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    padding: 20,
+  },
+  flatlistBlockIcon: {
+    height: 70,
+    width: 70,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+  },
+  flatlistBlockText: {
+    width: '100%',
+    paddingLeft: 20,
+  },
+  flatlistTitle: {
+    fontSize: 40,
+  },
+  flatlistText: { color: '#9E9E9E' },
 })
