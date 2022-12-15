@@ -132,6 +132,11 @@ export default function MainScreen() {
             <View style={styles.personalButtonViewCorner} />
             <View style={styles.personalButtonViewCircle}>
               <EvilIcons name="pencil" size={24} color="black" />
+              {/* <Ionicons
+                name="person-circle-outline"
+                size={width * 0.3 * 0.25 + 2}
+                color="#000"
+              /> */}
             </View>
             <View style={styles.personalButtonViewTextView}>
               <Text style={styles.personalButtonViewTitle}>21</Text>
@@ -177,6 +182,8 @@ const styles = StyleSheet.create({
   },
 
   // inside header
+
+  // button with person
   personalButtonView: {
     width: width * 0.3,
     height: width * 0.25,
