@@ -167,7 +167,8 @@ export default function FamilyScreen() {
   }
 
   const colorsForFlarList = [
-    [colors.orange, colors.mainorange],
+    [colors.sky, colors.mainsky],
+
     [colors.green, colors.maingreen],
     [colors.blue, colors.mainblue],
     [colors.purple, colors.mainpurple],
@@ -185,7 +186,7 @@ export default function FamilyScreen() {
         >
           <Ionicons name="ios-people-circle" size={24} color={colors.black} />
           <Text style={styles.faltListTitle}>{item['family-name']}</Text>
-
+          {/* switch to button */}
           <TouchableOpacity
             style={[
               styles.changeButtonView,
@@ -199,6 +200,18 @@ export default function FamilyScreen() {
             <Ionicons name="arrow-redo-outline" size={24} color="black" />
             <Text style={styles.changeButtonText}>Switch to this family</Text>
           </TouchableOpacity>
+          {/* amount of members */}
+          <View
+            style={[
+              styles.membersView,
+              { borderColor: colorsForFlarList[index % 4][1] },
+            ]}
+          >
+            <Text style={styles.membersText}>
+              {item['family-users'].length}{' '}
+              {item['family-users'].length == 1 ? 'member' : 'members'}
+            </Text>
+          </View>
         </View>
       )
     } else {
@@ -242,6 +255,7 @@ export default function FamilyScreen() {
   return (
     <View style={styles.container}>
       <ScrollView>
+        {/* Modal */}
         <Modal visible={modalVisibla}>
           <TouchableOpacity onPress={() => setModalVisible(false)}>
             <Text>Close</Text>
@@ -264,12 +278,32 @@ export default function FamilyScreen() {
         <View>
           <Text style={styles.title}>Family</Text>
           <View style={styles.currentFamilyBlock}>
-            <Text style={styles.currentFamilyText}>Your current family is</Text>
-            <Text style={styles.currentFamilyTitle}> {currentfamily}</Text>
+            <View style={styles.currentFamilyNameBlock}>
+              <Text style={styles.currentFamilyText}>
+                Your current family is
+              </Text>
+              <Text style={styles.currentFamilyTitle}> {currentfamily}</Text>
+            </View>
+            <View style={styles.currentFamilyIcon}>
+              <Ionicons name="people-outline" size={44} color={colors.black} />
+            </View>
           </View>
-          <Text>user:{auth.currentUser.email}</Text>
+          <View style={styles.moreInfoView}>
+            <Text style={styles.moreInfoText}>
+              More information about the family
+            </Text>
+            <View style={styles.moreInfoIcon}>
+              <Ionicons
+                name="information-circle-outline"
+                size={32}
+                color={colors.white}
+              />
+            </View>
+          </View>
 
-          <Text>List of available families:</Text>
+          <Text style={styles.memberOfTitle}>
+            Families groups you are a member of:
+          </Text>
           <View style={styles.flatListBlock}>
             <FlatList
               data={[...families, lastFamilyItem]}
@@ -278,26 +312,13 @@ export default function FamilyScreen() {
               showsHorizontalScrollIndicator={false}
             />
           </View>
-          <View style={styles.usersBlock}>
-            <View style={styles.usersBlockFlatListView}>
-              {familyUsers.map((item, index) => (
-                <Text key={index}>{item}</Text>
-              ))}
-            </View>
+        </View>
+        <View style={styles.usersBlock}>
+          <View style={styles.usersBlockFlatListView}>
+            {familyUsers.map((item, index) => (
+              <Text key={index}>{item}</Text>
+            ))}
           </View>
-
-          {/* {families.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.listFamilies}
-            onPress={() => {
-              setCurrentFamily(item)
-              setDBCurrentFamily(item)
-            }}
-          >
-            <Text>{item}</Text>
-          </TouchableOpacity>
-        ))} */}
         </View>
       </ScrollView>
     </View>
@@ -306,11 +327,12 @@ export default function FamilyScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
     flex: 1,
-    paddingTop: 20,
     justifyContent: 'flex-start',
+    paddingTop: 20,
   },
+
   // header
   header: {
     width: '100%',
@@ -327,7 +349,7 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 5,
-    backgroundColor: colors.mainorange,
+    backgroundColor: colors.white,
     position: 'absolute',
     top: 0,
     left: 0,
@@ -366,11 +388,26 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   currentFamilyBlock: {
-    backgroundColor: colors.background,
-    width: '90%',
+    width: width * 0.9,
+    height: width * 0.2,
+    flexDirection: 'row',
     alignSelf: 'center',
+    borderWidth: 2,
+    borderColor: colors.darkbackground,
     borderRadius: 25,
-    padding: 15,
+  },
+  currentFamilyNameBlock: {
+    width: width * 0.9 * 0.8,
+    height: width * 0.2,
+    borderColor: colors.black,
+    borderWidth: 2,
+    borderRadius: 25,
+    padding: 5,
+    left: -2,
+    top: -2,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   currentFamilyText: {
     color: colors.darkbackground,
@@ -380,9 +417,36 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     color: colors.black,
   },
+  currentFamilyIcon: {
+    width: width * 0.9 * 0.2,
+    height: width * 0.2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  moreInfoView: {
+    width: '90%',
+    height: 34,
+    marginVertical: 15,
+    paddingHorizontal: 15,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    borderRadius: 100,
+    backgroundColor: colors.black,
+  },
+  moreInfoText: {
+    color: colors.white,
+    fontSize: 16,
+  },
+  moreInfoIcon: {
+    position: 'absolute',
+    right: 0,
+  },
+
   listFamilies: {
     width: '100%',
-    backgroundColor: 'red',
     flexDirection: 'row',
     alignItems: 'center',
     margin: 1,
@@ -391,27 +455,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 5,
   },
-  buttonAdd: {
-    marginVertical: 5,
-    padding: 5,
-    backgroundColor: '#0088ee',
-    borderRadius: 5,
-    width: '100%',
-    height: 30,
+
+  memberOfTitle: {
     alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonBack: {
-    marginVertical: 5,
-    padding: 5,
-    backgroundColor: 'red',
-    borderRadius: 5,
-    width: '100%',
-    height: 30,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
+    fontSize: 20,
   },
 
   // Modal
@@ -436,7 +483,8 @@ const styles = StyleSheet.create({
   // FlatList
 
   flatListBlock: {
-    marginVertical: 30,
+    marginTop: 10,
+    marginBottom: 30,
     width: '100%',
   },
   flatListView: {
@@ -445,6 +493,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 25,
     marginLeft: 20,
+    borderWidth: 1,
   },
   faltListTitle: {
     fontSize: 24,
@@ -485,6 +534,22 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
 
+  membersView: {
+    position: 'absolute',
+    left: 15,
+    bottom: 15,
+    width: '50%',
+    padding: 5,
+    alignItems: 'center',
+    borderRadius: 100,
+
+    borderTopWidth: 1,
+    borderLeftWidth: 2,
+    borderRightWidth: 2,
+    borderBottomWidth: 3,
+  },
+  membersText: {},
+
   // users block
 
   usersBlock: {
@@ -492,12 +557,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 20,
+    backgroundColor: colors.white,
+    borderTopRightRadius: 35,
+    borderTopLeftRadius: 35,
   },
   usersBlockFlatListView: {
     width: width * 0.6,
     height: width * 0.6,
     borderWidth: 3,
     borderColor: colors.darkbackground,
+    backgroundColor: colors.white,
     borderRadius: 25,
     overflow: 'hidden',
     padding: 15,
