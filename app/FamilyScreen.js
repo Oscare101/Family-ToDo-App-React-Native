@@ -9,6 +9,7 @@ import {
   TextInput,
   Dimensions,
   FlatList,
+  ScrollView,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import colors from '../constants/colors'
@@ -26,6 +27,7 @@ export default function FamilyScreen() {
   const navigation = useNavigation()
   const [currentfamily, setCurrentFamily] = useState('')
   const [families, setFamilies] = useState([])
+  const [familiesName, setFamiliesName] = useState([])
 
   const [familyName, setFamilyName] = useState('f2')
   const [familyPassword, setFamilyPassword] = useState('1')
@@ -37,7 +39,7 @@ export default function FamilyScreen() {
   useEffect(() => {
     const GetData = async () => {
       let familiesList = []
-
+      let currentFamily = ''
       const userSnapshot = await getDocs(collection(db, 'users'))
       const userList = userSnapshot.docs.map((doc) => doc.data())
 
@@ -45,18 +47,25 @@ export default function FamilyScreen() {
         if (itemUser['user-email'] == auth.currentUser.email) {
           familiesList = itemUser['user-families']
           setCurrentFamily(itemUser['user-current-family'])
+          currentFamily = itemUser['user-current-family']
         }
       })
       let myFamilies = []
+      let myfamiliesName = []
       const userSnapshotF = await getDocs(collection(db, 'families'))
       const userListF = userSnapshotF.docs.map((doc) => doc.data())
       userListF.map((item) => {
         if (familiesList.includes(item['family-name'])) {
           myFamilies.push(item)
+          myfamiliesName.push(item['family-name'])
+          if (currentFamily == item['family-name']) {
+            setFamilyUsers(item['family-users'])
+          }
         } else {
         }
       })
       setFamilies(myFamilies)
+      setFamiliesName(myfamiliesName)
     }
     GetData()
   }, [])
@@ -75,13 +84,14 @@ export default function FamilyScreen() {
     await setDoc(
       doc(db, 'users', auth.currentUser.email),
       {
-        'user-families': [...families, item],
+        'user-families': [...familiesName, item],
         'user-current-family': item,
       },
       { merge: true }
     )
     setCurrentFamily(item)
-    const familyUsersOfNewFamily = []
+    setFamilies([...families, item])
+    let familyUsersOfNewFamily = []
     const userColF = collection(db, 'families')
     const userSnapshotF = await getDocs(userColF)
     const userListF = userSnapshotF.docs.map((doc) => doc.data())
@@ -96,12 +106,11 @@ export default function FamilyScreen() {
     await setDoc(
       doc(db, 'families', item),
       {
-        'family-users': [...familyUsersOfNewFamily, auth.currentUser.email], ///////////////////
+        'family-users': [...familyUsersOfNewFamily, auth.currentUser.email],
       },
       { merge: true }
     )
-    setFamilyUsers([...familyUsers, auth.currentUser.email])
-    setFamilies([...families, item])
+    setFamilyUsers([...familyUsersOfNewFamily, auth.currentUser.email])
   }
 
   const JoinFamily = async () => {
@@ -228,47 +237,56 @@ export default function FamilyScreen() {
       )
     }
   }
+  // console.log('*********',families)
 
   return (
     <View style={styles.container}>
-      <Modal visible={modalVisibla}>
-        <TouchableOpacity onPress={() => setModalVisible(false)}>
-          <Text>Close</Text>
-        </TouchableOpacity>
-        <InsideModalView />
-      </Modal>
-      {/* header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={45} color={colors.black} />
-        </TouchableOpacity>
-        <View style={styles.dots}>
-          <View style={styles.dot1} />
-          <View style={styles.dot2} />
-          <View style={styles.dot3} />
-          <View style={styles.dot4} />
+      <ScrollView>
+        <Modal visible={modalVisibla}>
+          <TouchableOpacity onPress={() => setModalVisible(false)}>
+            <Text>Close</Text>
+          </TouchableOpacity>
+          <InsideModalView />
+        </Modal>
+        {/* header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={45} color={colors.black} />
+          </TouchableOpacity>
+          <View style={styles.dots}>
+            <View style={styles.dot1} />
+            <View style={styles.dot2} />
+            <View style={styles.dot3} />
+            <View style={styles.dot4} />
+          </View>
         </View>
-      </View>
-      {/* body */}
-      <View>
-        <Text style={styles.title}>Family</Text>
-        <View style={styles.currentFamilyBlock}>
-          <Text style={styles.currentFamilyText}>Your current family is</Text>
-          <Text style={styles.currentFamilyTitle}> {currentfamily}</Text>
-        </View>
-        <Text>user:{auth.currentUser.email}</Text>
+        {/* body */}
+        <View>
+          <Text style={styles.title}>Family</Text>
+          <View style={styles.currentFamilyBlock}>
+            <Text style={styles.currentFamilyText}>Your current family is</Text>
+            <Text style={styles.currentFamilyTitle}> {currentfamily}</Text>
+          </View>
+          <Text>user:{auth.currentUser.email}</Text>
 
-        <Text>List of available families:</Text>
-        <View style={styles.flatListBlock}>
-          <FlatList
-            data={[...families, lastFamilyItem]}
-            renderItem={(index) => RenderFlatListFamilies(index)}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
+          <Text>List of available families:</Text>
+          <View style={styles.flatListBlock}>
+            <FlatList
+              data={[...families, lastFamilyItem]}
+              renderItem={(index) => RenderFlatListFamilies(index)}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
+          <View style={styles.usersBlock}>
+            <View style={styles.usersBlockFlatListView}>
+              {familyUsers.map((item, index) => (
+                <Text key={index}>{item}</Text>
+              ))}
+            </View>
+          </View>
 
-        {/* {families.map((item, index) => (
+          {/* {families.map((item, index) => (
           <TouchableOpacity
             key={index}
             style={styles.listFamilies}
@@ -280,7 +298,8 @@ export default function FamilyScreen() {
             <Text>{item}</Text>
           </TouchableOpacity>
         ))} */}
-      </View>
+        </View>
+      </ScrollView>
     </View>
   )
 }
@@ -460,5 +479,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  faltListAddTitle: { fontSize: 16, letterSpacing: 1, color: colors.black },
+  faltListAddTitle: {
+    fontSize: 16,
+    letterSpacing: 1,
+    color: colors.black,
+  },
+
+  // users block
+
+  usersBlock: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 20,
+  },
+  usersBlockFlatListView: {
+    width: width * 0.6,
+    height: width * 0.6,
+    borderWidth: 3,
+    borderColor: colors.darkbackground,
+    borderRadius: 25,
+    overflow: 'hidden',
+    padding: 15,
+  },
 })
