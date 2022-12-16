@@ -12,6 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native'
 import { EvilIcons, Ionicons } from '@expo/vector-icons'
 
+import colors from '../constants/colors'
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
@@ -25,7 +26,7 @@ export default function MainScreen() {
       text: 'manage your family or even start a new one',
       icon: 'people-outline',
       screen: 'FamilyScreen',
-      color: '#DEECED',
+      color: colors.blue,
     },
     {
       id: 2,
@@ -33,7 +34,7 @@ export default function MainScreen() {
       text: 'set long-term and big goals',
       icon: 'bookmarks-outline',
       screen: '',
-      color: '#DDD2FD',
+      color: colors.purple,
     },
     {
       id: 3,
@@ -41,7 +42,15 @@ export default function MainScreen() {
       text: 'manage family expenses and income',
       icon: 'cash-outline',
       screen: '',
-      color: '#C3DEC1',
+      color: colors.green,
+    },
+    {
+      id: 4,
+      title: 'Calendar',
+      text: 'plan your events',
+      icon: 'calendar',
+      screen: '',
+      color: colors.orange,
     },
   ]
 
@@ -60,7 +69,7 @@ export default function MainScreen() {
           <View
             style={[styles.flatlistBlockIcon, { backgroundColor: item.color }]}
           >
-            <Ionicons name={item.icon} size={40} color="#000" />
+            <Ionicons name={item.icon} size={40} color={colors.black} />
           </View>
           <View style={styles.flatlistBlockText}>
             <Text style={styles.flatlistTitle}>{item.title}</Text>
@@ -150,14 +159,16 @@ export default function MainScreen() {
     <View style={styles.container}>
       <StatusBar />
       <View style={styles.headerBlock}>
+        {/* top header */}
         <View style={styles.headerTexts}>
           <Text style={styles.headerTextsTitle}>Your Task Manager</Text>
           <ContentDate />
         </View>
+        {/* mid header */}
         <View style={styles.headerPersonalTodoBlock}>
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => navigation.navigate('UserScreen')}
+            onPress={() => navigation.navigate('ToDoScreen')}
           >
             <View style={styles.personalButtonView}>
               <View style={styles.personalButtonViewLeft} />
@@ -185,7 +196,11 @@ export default function MainScreen() {
               </View>
               <View style={styles.toDoButtonViewOpen}>
                 <View style={styles.toDoButtonViewOpenIcon}>
-                  <Ionicons name="newspaper-outline" size={24} color="#fff" />
+                  <Ionicons
+                    name="newspaper-outline"
+                    size={24}
+                    color={colors.white}
+                  />
                 </View>
                 <Text style={styles.toDoButtonViewOpenText}>chat</Text>
               </View>
@@ -193,14 +208,39 @@ export default function MainScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* <TouchableOpacity onPress={() => navigation.navigate('UserScreen')}>
-          <Ionicons name="person-circle-outline" size={35} color="red" />
-        </TouchableOpacity> */}
-
-        {/* <TouchableOpacity onPress={() => navigation.navigate('SettingsScreen')}>
-          <Ionicons name="settings-outline" size={35} color="red" />
-        </TouchableOpacity> */}
+        {/* bottom header */}
+        <View style={styles.bottomHeaderBlock}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => navigation.navigate('UserScreen')}
+          >
+            <View style={styles.bottomHeaderAccountView}>
+              <Text style={styles.bottomHeaderAccountTitle}>Account</Text>
+              <View style={styles.bottomHeaderAccountIcon}>
+                <Ionicons
+                  name="person-circle-outline"
+                  size={40}
+                  color={colors.black}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => navigation.navigate('SettingsScreen')}
+          >
+            <View style={styles.bottomHeaderSettingsView}>
+              <Text style={styles.bottomHeaderSettingsTitle}>Settings</Text>
+              {/* <Ionicons
+                name="settings-outline"
+                size={35}
+                color={colors.white}
+              /> */}
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
+      {/* flatlist */}
       <View style={styles.flatListView}>
         <FlatList
           numColumns={1}
@@ -213,22 +253,24 @@ export default function MainScreen() {
   )
 }
 
+const widthForSmallButtons = width * 0.55 * 0.5
+const widthForSmallIcon = width * 0.25 * 0.5
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDE8C9',
+    backgroundColor: colors.background,
     paddingTop: 20,
   },
   headerBlock: {
     width: '100%',
-    height: height * 0.5,
+    height: height * 0.45,
     padding: 0,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
 
-  // inside header
+  // mid header block
   headerPersonalTodoBlock: {
     width: '100%',
     flexDirection: 'row',
@@ -242,6 +284,7 @@ const styles = StyleSheet.create({
   },
   headerTextsTitle: {
     fontSize: 40,
+    color: colors.black,
   },
 
   // button with person
@@ -253,7 +296,7 @@ const styles = StyleSheet.create({
   personalButtonViewLeft: {
     height: '100%',
     width: width * 0.35 - width * 0.35 * 0.25,
-    backgroundColor: '#000',
+    backgroundColor: colors.black,
     borderRadius: 25,
     borderTopEndRadius: width * 0.35 * 0.25 * 0.5,
     position: 'absolute',
@@ -262,7 +305,7 @@ const styles = StyleSheet.create({
   personalButtonViewBottom: {
     height: width * 0.25 - width * 0.35 * 0.25,
     width: '100%',
-    backgroundColor: '#000',
+    backgroundColor: colors.black,
     borderRadius: 25,
     borderTopEndRadius: width * 0.35 * 0.25 * 0.5,
     position: 'absolute',
@@ -274,7 +317,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: width * 0.35 * 0.25 * 0.5,
     right: width * 0.35 * 0.25 * 0.5,
-    backgroundColor: '#000',
+    backgroundColor: colors.black,
   },
   personalButtonViewCorner: {
     width: width * 0.35 * 0.25,
@@ -293,6 +336,7 @@ const styles = StyleSheet.create({
     height: width * 0.35 * 0.25,
     borderWidth: 1,
     borderRadius: 100,
+    borderColor: colors.black,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -312,6 +356,7 @@ const styles = StyleSheet.create({
   personalButtonViewText: {
     color: '#fffdfc',
     fontSize: 16,
+    letterSpacing: 2,
   },
   // ToDo Button View
 
@@ -334,27 +379,71 @@ const styles = StyleSheet.create({
   },
   toDoButtonViewOpen: {
     height: width * 0.25,
-    width: '50%',
+    width: widthForSmallButtons,
     position: 'absolute',
     right: -2,
     top: -2,
     borderWidth: 2,
+    borderColor: colors.black,
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   toDoButtonViewOpenIcon: {
-    width: '50%',
-    height: '50%',
+    width: widthForSmallIcon,
+    height: widthForSmallIcon,
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#000',
+    backgroundColor: colors.black,
   },
   toDoButtonViewOpenText: {
     fontSize: 16,
-    letterSpacing: 1,
+    letterSpacing: 2,
+  },
+
+  // bottom header
+
+  bottomHeaderBlock: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '100%',
+  },
+  bottomHeaderAccountView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 100,
+    width: width * 0.55 * 0.5 + width * 0.35,
+    height: 40,
+    borderWidth: 2,
+    borderColor: colors.darkbackground,
+    alignItems: 'center',
+  },
+  bottomHeaderAccountTitle: {
+    color: colors.black,
+    fontSize: 18,
+    letterSpacing: 2,
+  },
+  bottomHeaderAccountIcon: {
+    position: 'absolute',
+    right: -2,
+  },
+
+  bottomHeaderSettingsView: {
+    height: 40,
+    width: widthForSmallButtons,
+    backgroundColor: colors.black,
+    borderRadius: 100,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 1,
+  },
+  bottomHeaderSettingsTitle: {
+    color: colors.white,
+    fontSize: 18,
+    letterSpacing: 2,
   },
 
   //////////////////
@@ -363,16 +452,16 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     borderTopLeftRadius: 50,
     overflow: 'hidden',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
   },
   flatlistBlock: {
     width: '100%',
-    height: 150,
+    height: 130,
 
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    padding: 20,
+    paddingHorizontal: 20,
   },
   flatlistBlockIcon: {
     height: 70,
@@ -388,6 +477,7 @@ const styles = StyleSheet.create({
   },
   flatlistTitle: {
     fontSize: 40,
+    color: colors.black,
   },
   flatlistText: { color: '#9E9E9E' },
 })
