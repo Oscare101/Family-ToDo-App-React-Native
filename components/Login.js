@@ -13,6 +13,8 @@ import { useNavigation } from '@react-navigation/native'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { Ionicons } from '@expo/vector-icons'
 
+import { getDatabase, ref, set, onValue, get, child } from 'firebase/database'
+import { database } from '../firebase/firebase-config'
 const auth = getAuth()
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
@@ -23,6 +25,18 @@ export default function Login() {
   const [email, setEmail] = useState('123@gmail.com')
   const [password, setPassword] = useState('123456')
   const [isSecure, setIsSecure] = useState(true)
+
+  function writeUserData(email, password) {
+    // set(ref(database, 'ppp/' + '1'), {
+    //   email: email,
+    // })
+
+    const starCountRef = ref(database, 'users/')
+    onValue(starCountRef, (snapshot) => {
+      const data = snapshot.val()
+      console.log(snapshot)
+    })
+  }
 
   const loginUser = () => {
     signInWithEmailAndPassword(auth, email, password)
@@ -70,7 +84,7 @@ export default function Login() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={() => loginUser(email, password)}>
+        <TouchableOpacity onPress={() => writeUserData(email, password)}>
           <View style={styles.buttonSubmit}>
             <Text style={styles.buttonText}>Log in</Text>
           </View>
