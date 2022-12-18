@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native'
 // import auth from '../firebase/firebase-config'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { Ionicons } from '@expo/vector-icons'
+import colors from '../constants/colors'
 
 import { getDatabase, ref, set, onValue, get, child } from 'firebase/database'
 import { database } from '../firebase/firebase-config'
@@ -26,17 +27,21 @@ export default function Login() {
   const [password, setPassword] = useState('123456')
   const [isSecure, setIsSecure] = useState(true)
 
-  function writeUserData(email, password) {
-    // set(ref(database, 'ppp/' + '1'), {
-    //   email: email,
-    // })
+  const [list, setList] = useState([])
 
-    const starCountRef = ref(database, 'users/')
-    onValue(starCountRef, (snapshot) => {
-      const data = snapshot.val()
-      console.log(snapshot)
-    })
-  }
+  // function writeUserData(email, password) {
+  //   set(ref(database, 'ppp/' + '1'), {
+  //     email: email,
+  //   })
+
+  //   const starCountRef = ref(database, 'ppp/1/')
+  //   onValue(starCountRef, (snapshot) => {
+  //     const data = snapshot.val()
+  //     console.log('list:', snapshot)
+  //     setList([...list, snapshot])
+  //   })
+  //   console.log(list)
+  // }
 
   const loginUser = () => {
     signInWithEmailAndPassword(auth, email, password)
@@ -52,7 +57,7 @@ export default function Login() {
     <View style={styles.container}>
       <View style={styles.circle1} />
       <View style={styles.circle2} />
-      <View>
+      <View style={styles.inputBlock}>
         <Text style={styles.title}>Login</Text>
 
         <View style={styles.input}>
@@ -84,14 +89,14 @@ export default function Login() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={() => writeUserData(email, password)}>
+        <TouchableOpacity onPress={() => loginUser(email, password)}>
           <View style={styles.buttonSubmit}>
-            <Text style={styles.buttonText}>Log in</Text>
+            <Text style={styles.buttonSubmitText}>Log in</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
           <View style={styles.buttonChange}>
-            <Text style={styles.buttonText}> to Registration</Text>
+            <Text style={styles.buttonChangeText}> to Registration</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -101,15 +106,16 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 50,
+    padding: 50,
     flex: 1,
-    paddingTop: height * 0.1,
+    paddingTop: height * 0.1 + 50,
+    backgroundColor: colors.white,
   },
   circle1: {
     width: height * 0.4,
     height: height * 0.4,
     position: 'absolute',
-    backgroundColor: '#816bffee',
+    backgroundColor: colors.mainpurple,
     borderRadius: 1000,
     bottom: width * -0.2,
     right: width * -0.3,
@@ -118,10 +124,17 @@ const styles = StyleSheet.create({
     width: height * 0.7,
     height: height * 0.7,
     position: 'absolute',
-    backgroundColor: '#ff6b81ee',
+    backgroundColor: colors.mainblue,
     borderRadius: 1000,
     right: width * 0.25,
     top: -50,
+  },
+  inputBlock: {
+    backgroundColor: colors.background,
+    borderRadius: 25,
+    padding: 25,
+    borderWidth: 2,
+    borderColor: colors.darkbackground,
   },
   title: {
     fontWeight: '900',
@@ -146,9 +159,9 @@ const styles = StyleSheet.create({
   },
   buttonSubmit: {
     marginVertical: 5,
-    padding: 5,
-    backgroundColor: 'red',
     borderRadius: 5,
+    borderWidth: 2,
+    borderColor: colors.black,
     width: '100%',
     height: 30,
     alignSelf: 'center',
@@ -157,8 +170,7 @@ const styles = StyleSheet.create({
   },
   buttonChange: {
     marginVertical: 5,
-    padding: 5,
-    backgroundColor: '#0088ee',
+    backgroundColor: colors.black,
     borderRadius: 5,
     width: '100%',
     height: 30,
@@ -166,5 +178,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonText: {},
+  buttonSubmitText: {
+    color: colors.black,
+  },
+  buttonChangeText: {
+    color: colors.white,
+  },
 })

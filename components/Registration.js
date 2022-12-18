@@ -8,6 +8,7 @@ import {
   Alert,
   Dimensions,
 } from 'react-native'
+import colors from '../constants/colors'
 import { useNavigation } from '@react-navigation/native'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { collection, getDocs, doc, setDoc } from 'firebase/firestore/lite'
@@ -54,7 +55,7 @@ export default function Registration() {
     <View style={styles.container}>
       <View style={styles.circle1} />
       <View style={styles.circle2} />
-      <View>
+      <View style={styles.inputBlock}>
         <Text style={styles.title}>Registration</Text>
         <View style={styles.input}>
           <TextInput
@@ -74,12 +75,16 @@ export default function Registration() {
         </View>
 
         <TouchableOpacity
+          activeOpacity={1}
           onPress={() => setGender(gender == 'man' ? 'woman' : 'man')}
         >
           <View
             style={[
               styles.genderView,
-              { backgroundColor: gender == 'man' ? 'blue' : 'red' },
+              {
+                backgroundColor:
+                  gender == 'man' ? colors.mainblue : colors.mainpurple,
+              },
             ]}
           >
             <Ionicons
@@ -121,12 +126,12 @@ export default function Registration() {
         </View>
         <TouchableOpacity onPress={() => register(email, password)}>
           <View style={styles.buttonSubmit}>
-            <Text style={styles.buttonText}>Regitraion</Text>
+            <Text style={styles.buttonSubmitText}>Regitraion</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <View style={styles.buttonChange}>
-            <Text style={styles.buttonText}>to Login</Text>
+            <Text style={styles.buttonChangeText}>to Login</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -136,27 +141,35 @@ export default function Registration() {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 50,
+    padding: 50,
     flex: 1,
-    paddingTop: height * 0.1,
+    paddingTop: height * 0.1 + 50,
+    backgroundColor: colors.white,
   },
   circle1: {
     width: height * 0.4,
     height: height * 0.4,
     position: 'absolute',
-    backgroundColor: '#816bffee',
+    backgroundColor: colors.mainpurple,
     borderRadius: 1000,
-    top: width * 0.2,
+    bottom: width * -0.2,
     right: width * -0.3,
   },
   circle2: {
     width: height * 0.7,
     height: height * 0.7,
     position: 'absolute',
-    backgroundColor: '#ff6b81ee',
+    backgroundColor: colors.mainblue,
     borderRadius: 1000,
     right: width * 0.25,
-    bottom: -50,
+    top: -50,
+  },
+  inputBlock: {
+    backgroundColor: colors.background,
+    borderRadius: 25,
+    padding: 25,
+    borderWidth: 2,
+    borderColor: colors.darkbackground,
   },
   title: {
     fontWeight: '900',
@@ -169,6 +182,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 30,
     elevation: 5,
+    borderWidth: 1,
+    marginVertical: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -183,7 +198,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     alignItems: 'center',
     justifyContent: 'space-between',
-    elevation: 5,
     backgroundColor: '#fff',
   },
   inputLine: {
@@ -192,27 +206,29 @@ const styles = StyleSheet.create({
   },
   buttonSubmit: {
     marginVertical: 5,
-    padding: 5,
-    backgroundColor: 'red',
     borderRadius: 5,
+    borderWidth: 2,
+    borderColor: colors.black,
     width: '100%',
     height: 30,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5,
   },
   buttonChange: {
     marginVertical: 5,
-    padding: 5,
-    backgroundColor: '#0088ee',
+    backgroundColor: colors.black,
     borderRadius: 5,
     width: '100%',
     height: 30,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 5,
   },
-  buttonText: {},
+  buttonSubmitText: {
+    color: colors.black,
+  },
+  buttonChangeText: {
+    color: colors.white,
+  },
 })

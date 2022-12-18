@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { EvilIcons, Ionicons } from '@expo/vector-icons'
+import { useBackHandler } from '@react-native-community/hooks'
 
 import colors from '../constants/colors'
 const height = Dimensions.get('window').height
@@ -54,9 +55,9 @@ export default function MainScreen() {
     },
   ]
 
-  // useEffect(() => {
-
-  // }, [])
+  useBackHandler(() => {
+    return true
+  })
 
   const renderFlatlist = ({ item }) => {
     return (
