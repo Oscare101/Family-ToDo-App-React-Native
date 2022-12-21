@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { Ionicons } from '@expo/vector-icons'
 import colors from '../constants/colors'
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getDatabase, ref, set, onValue, get, child } from 'firebase/database'
 import { database } from '../firebase/firebase-config'
 const auth = getAuth()
@@ -45,7 +45,9 @@ export default function Login() {
 
   const loginUser = () => {
     signInWithEmailAndPassword(auth, email, password)
-      .then((re) => {
+      .then(async (re) => {
+        await AsyncStorage.setItem('email', email)
+        await AsyncStorage.setItem('password', password)
         setEmail('')
         setPassword('')
         navigation.navigate('MainNavigation')

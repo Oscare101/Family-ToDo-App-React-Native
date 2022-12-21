@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native'
 import colors from '../constants/colors'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { collection, getDocs, doc, setDoc } from 'firebase/firestore/lite'
@@ -42,7 +43,10 @@ export default function Registration() {
 
   function register() {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((re) => {
+      .then(async (re) => {
+        await AsyncStorage.setItem('email', email)
+        await AsyncStorage.setItem('password', password)
+
         SetUserName()
         setEmail('')
         setPassword('')
