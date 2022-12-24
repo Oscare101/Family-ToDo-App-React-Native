@@ -66,6 +66,7 @@ export default () => {
     <NavigationContainer>
       <StatusBar style="auto" />
       <App />
+      {/* <MainNavigation /> */}
     </NavigationContainer>
   )
 }

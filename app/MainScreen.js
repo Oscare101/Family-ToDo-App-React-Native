@@ -9,16 +9,21 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native'
+import Login from '../components/Login'
+import Registration from '../components/Registration'
 import { useNavigation } from '@react-navigation/native'
 import { EvilIcons, Ionicons } from '@expo/vector-icons'
 import { useBackHandler } from '@react-native-community/hooks'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import colors from '../constants/colors'
+import { auth } from '../firebase/firebase-config'
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
 export default function MainScreen() {
   const navigation = useNavigation()
+  // const [email, setEmail] = useState(route.params.email)
 
   const Data = [
     {
@@ -155,6 +160,14 @@ export default function MainScreen() {
       </Text>
     )
   }
+
+  // useEffect(async () => {
+  //   setEmail(await AsyncStorage.getItem('email'))
+  //   console.log('useEffect Done=====================')
+  // }, [])
+
+  // const login = <Login />
+  // const registration = <Registration />
 
   return (
     <View style={styles.container}>

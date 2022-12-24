@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -23,8 +23,8 @@ const height = Dimensions.get('window').height
 export default function Login() {
   const navigation = useNavigation()
 
-  const [email, setEmail] = useState('123@gmail.com')
-  const [password, setPassword] = useState('123456')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [isSecure, setIsSecure] = useState(true)
 
   const [list, setList] = useState([])
@@ -54,6 +54,11 @@ export default function Login() {
       })
       .catch((err) => console.log(err))
   }
+
+  useEffect(async () => {
+    setEmail(await AsyncStorage.getItem('email'))
+    setPassword(await AsyncStorage.getItem('password'))
+  }, [])
 
   return (
     <View style={styles.container}>

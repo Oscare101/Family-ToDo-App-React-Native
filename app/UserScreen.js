@@ -9,9 +9,10 @@ import {
   FlatList,
 } from 'react-native'
 import colors from '../constants/colors'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // import { useFonts } from 'expo-font'
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, User, signOut } from 'firebase/auth'
 import { collection, getDocs, doc, setDoc } from 'firebase/firestore/lite'
 import { db } from '../firebase/firebase-config'
 import { useNavigation } from '@react-navigation/native'
@@ -49,6 +50,18 @@ export default function UserScreen() {
     GetData()
   }, [])
 
+  const LogOut = async () => {
+    signOut(auth)
+      .then(async () => {
+        await AsyncStorage.setItem('email', '')
+        await AsyncStorage.setItem('password', '')
+        navigation.navigate('MainScreen')
+      })
+      .catch((error) => {
+        // An error happened.
+      })
+  }
+
   return (
     <View style={styles.container}>
       {/* header */}
@@ -73,7 +86,9 @@ export default function UserScreen() {
           <View style={styles.userImage} />
         </View>
       </View>
-      {/* families */}
+      <TouchableOpacity onPress={() => LogOut()}>
+        <Text>Log Out</Text>
+      </TouchableOpacity>
     </View>
   )
 }
