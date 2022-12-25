@@ -16,12 +16,15 @@ import colors from '../constants/colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getDatabase, ref, set, onValue, get, child } from 'firebase/database'
 import { database } from '../firebase/firebase-config'
+import { useIsFocused } from '@react-navigation/native'
+
 const auth = getAuth()
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
 export default function Login() {
   const navigation = useNavigation()
+  const isFocused = useIsFocused()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -55,10 +58,16 @@ export default function Login() {
       .catch((err) => console.log(err))
   }
 
-  useEffect(async () => {
+  const GetEmail = async () => {
     setEmail(await AsyncStorage.getItem('email'))
     setPassword(await AsyncStorage.getItem('password'))
-  }, [])
+  }
+
+  useEffect(() => {
+    if (isFocused) {
+      GetEmail()
+    }
+  }, [isFocused])
 
   return (
     <View style={styles.container}>

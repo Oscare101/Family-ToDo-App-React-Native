@@ -137,7 +137,9 @@ export default function ToDoScreen() {
     <View style={styles.container}>
       {/* header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack({ length: list.length })}
+        >
           <Ionicons name="arrow-back" size={35} color={colors.black} />
         </TouchableOpacity>
         <View style={styles.dots}>

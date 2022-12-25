@@ -15,6 +15,17 @@ import { useNavigation } from '@react-navigation/native'
 import { EvilIcons, Ionicons } from '@expo/vector-icons'
 import { useBackHandler } from '@react-native-community/hooks'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useIsFocused } from '@react-navigation/native'
+
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
+import {
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+  onSnapshot,
+} from 'firebase/firestore/lite'
+import { db } from '../firebase/firebase-config'
 
 import colors from '../constants/colors'
 import { auth } from '../firebase/firebase-config'
@@ -22,8 +33,9 @@ const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
 export default function MainScreen() {
+  const [listLength, setListLength] = useState()
   const navigation = useNavigation()
-  // const [email, setEmail] = useState(route.params.email)
+  const isFocused = useIsFocused()
 
   const Data = [
     {
@@ -59,6 +71,37 @@ export default function MainScreen() {
       color: colors.orange,
     },
   ]
+
+  const GetUser = async () => {
+    let family = []
+
+    const userCol = collection(db, 'users')
+    const userSnapshot = await getDocs(userCol)
+    const userList = userSnapshot.docs.map((doc) => doc.data())
+    userList.map((item) => {
+      if (item['user-email'] == auth.currentUser.email) {
+        // setUserCurrentFamily(item['user-current-family'])
+        // setName(item['user-name'])
+        family = item['user-current-family']
+      }
+    })
+    const userColF = collection(db, 'families')
+    const userSnapshotF = await getDocs(userColF)
+    const userListF = userSnapshotF.docs.map((doc) => doc.data())
+    userListF.map((item) => {
+      if (family == item['family-name']) {
+        setListLength(item.todoList.length)
+      } else {
+      }
+    })
+  }
+
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      GetUser()
+    }
+  }, [isFocused])
 
   // useBackHandler(() => {
   //   return true
@@ -193,7 +236,7 @@ export default function MainScreen() {
                 <EvilIcons name="pencil" size={24} color="black" />
               </View>
               <View style={styles.personalButtonViewTextView}>
-                <Text style={styles.personalButtonViewTitle}>21</Text>
+                <Text style={styles.personalButtonViewTitle}>{listLength}</Text>
                 <Text style={styles.personalButtonViewText}>tasks left</Text>
               </View>
             </View>
