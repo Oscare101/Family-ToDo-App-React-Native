@@ -28,7 +28,8 @@ export default function FamilyScreen() {
   const [currentfamily, setCurrentFamily] = useState('')
   const [families, setFamilies] = useState([])
   const [familiesName, setFamiliesName] = useState([])
-
+  const [name, setName] = useState('')
+  const [user, setUser] = useState()
   const [familyName, setFamilyName] = useState('f2')
   const [familyPassword, setFamilyPassword] = useState('1')
   const [isSecure, setIsSecure] = useState(true)
@@ -36,37 +37,40 @@ export default function FamilyScreen() {
 
   const [modalVisibla, setModalVisible] = useState(false)
 
-  useEffect(() => {
-    const GetData = async () => {
-      let familiesList = []
-      let currentFamily = ''
-      const userSnapshot = await getDocs(collection(db, 'users'))
-      const userList = userSnapshot.docs.map((doc) => doc.data())
+  const GetData = async () => {
+    let familiesList = []
+    let currentFamily = ''
+    const userSnapshot = await getDocs(collection(db, 'users'))
+    const userList = userSnapshot.docs.map((doc) => doc.data())
 
-      userList.map((itemUser) => {
-        if (itemUser['user-email'] == auth.currentUser.email) {
-          familiesList = itemUser['user-families']
-          setCurrentFamily(itemUser['user-current-family'])
-          currentFamily = itemUser['user-current-family']
+    userList.map((itemUser) => {
+      if (itemUser['user-email'] == auth.currentUser.email) {
+        familiesList = itemUser['user-families']
+        setUser(itemUser)
+        setName(itemUser['user-name'])
+        setCurrentFamily(itemUser['user-current-family'])
+        currentFamily = itemUser['user-current-family']
+      }
+    })
+    let myFamilies = []
+    let myfamiliesName = []
+    const userSnapshotF = await getDocs(collection(db, 'families'))
+    const userListF = userSnapshotF.docs.map((doc) => doc.data())
+    userListF.map((item) => {
+      if (familiesList.includes(item['family-name'])) {
+        myFamilies.push(item)
+        myfamiliesName.push(item['family-name'])
+        if (currentFamily == item['family-name']) {
+          setFamilyUsers(item['family-users'])
         }
-      })
-      let myFamilies = []
-      let myfamiliesName = []
-      const userSnapshotF = await getDocs(collection(db, 'families'))
-      const userListF = userSnapshotF.docs.map((doc) => doc.data())
-      userListF.map((item) => {
-        if (familiesList.includes(item['family-name'])) {
-          myFamilies.push(item)
-          myfamiliesName.push(item['family-name'])
-          if (currentFamily == item['family-name']) {
-            setFamilyUsers(item['family-users'])
-          }
-        } else {
-        }
-      })
-      setFamilies(myFamilies)
-      setFamiliesName(myfamiliesName)
-    }
+      } else {
+      }
+    })
+    setFamilies(myFamilies)
+    setFamiliesName(myfamiliesName)
+  }
+
+  useEffect(() => {
     GetData()
   }, [])
 
@@ -92,8 +96,7 @@ export default function FamilyScreen() {
     setCurrentFamily(item)
     setFamilies([...families, item])
     let familyUsersOfNewFamily = []
-    const userColF = collection(db, 'families')
-    const userSnapshotF = await getDocs(userColF)
+    const userSnapshotF = await getDocs(collection(db, 'families'))
     const userListF = userSnapshotF.docs.map((doc) => doc.data())
     userListF.map((i) => {
       if (item == i['family-name']) {
@@ -114,18 +117,22 @@ export default function FamilyScreen() {
   }
 
   const JoinFamily = async () => {
-    const userColF = collection(db, 'families')
-    const userSnapshotF = await getDocs(userColF)
-    const userListF = userSnapshotF.docs.map((doc) => doc.data())
-    userListF.map((item) => {
-      if (
-        familyName == item['family-name'] &&
-        familyPassword == item['family-password']
-      ) {
-        setDBUserFamilies(familyName)
-      } else {
-      }
-    })
+    if (user['user-families'].includes(familyName)) {
+      setModalVisible(false)
+    } else {
+      setModalVisible(false)
+      const userSnapshotF = await getDocs(collection(db, 'families'))
+      const userListF = userSnapshotF.docs.map((doc) => doc.data())
+      userListF.map((item) => {
+        if (
+          familyName == item['family-name'] &&
+          familyPassword == item['family-password']
+        ) {
+          setDBUserFamilies(familyName)
+        } else {
+        }
+      })
+    }
   }
 
   function InsideModalView() {
@@ -195,6 +202,8 @@ export default function FamilyScreen() {
             onPress={() => {
               setCurrentFamily(item['family-name'])
               setDBCurrentFamily(item['family-name'])
+
+              GetData()
             }}
           >
             <Ionicons name="arrow-redo-outline" size={24} color="black" />

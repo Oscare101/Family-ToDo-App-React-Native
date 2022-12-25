@@ -36,8 +36,8 @@ export default function Registration() {
       'user-email': auth.currentUser.email,
       'user-age': age,
       'user-gender': gender,
-      'user-families': ['f2', 'f3'],
-      'user-current-family': 'f2',
+      'user-families': [],
+      'user-current-family': '',
     })
   }
 

@@ -1,5 +1,6 @@
 import { Text, TouchableOpacity, StyleSheet, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import colors from '../constants/colors'
 
 export default function FirstPage() {
   const navigation = useNavigation()
@@ -15,9 +16,11 @@ export default function FirstPage() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
     padding: '5%',
     flex: 1,
     paddingTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })

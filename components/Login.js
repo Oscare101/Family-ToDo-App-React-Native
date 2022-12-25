@@ -30,8 +30,6 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [isSecure, setIsSecure] = useState(true)
 
-  const [list, setList] = useState([])
-
   // function writeUserData(email, password) {
   //   set(ref(database, 'ppp/' + '1'), {
   //     email: email,
