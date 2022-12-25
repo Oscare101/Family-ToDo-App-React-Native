@@ -6,6 +6,8 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  ScrollView,
+  RefreshControl,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
@@ -19,37 +21,69 @@ import {
   onSnapshot,
 } from 'firebase/firestore/lite'
 import { db } from '../firebase/firebase-config'
+import colors from '../constants/colors'
 
 const auth = getAuth()
+
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout))
+}
+
+const icons = [
+  'fast-food-outline',
+  'home-outline',
+  'car-outline',
+  'cart-outline',
+  'airplane-outline',
+  'newspaper-outline',
+  'phone-portrait-outline',
+  'calendar-sharp',
+]
 
 export default function ToDoScreen() {
   const navigation = useNavigation()
   const [userCurrentFamily, setUserCurrentFamily] = useState('')
+  const [name, setName] = useState('')
   const [list, setList] = useState([])
   const [item, setItem] = useState('')
-  useEffect(() => {
+  // const [icon, setIcon] = useState('')
+  const [curIcon, setCurIcon] = useState('')
+
+  const [refreshing, setRefreshing] = React.useState(false)
+
+  const GetUser = async () => {
     let family = []
 
-    const GetUser = async () => {
-      const userCol = collection(db, 'users')
-      const userSnapshot = await getDocs(userCol)
-      const userList = userSnapshot.docs.map((doc) => doc.data())
-      userList.map((item) => {
-        if (item['user-email'] == auth.currentUser.email) {
-          setUserCurrentFamily(item['user-current-family'])
-          family = item['user-current-family']
-        }
-      })
-      const userColF = collection(db, 'families')
-      const userSnapshotF = await getDocs(userColF)
-      const userListF = userSnapshotF.docs.map((doc) => doc.data())
-      userListF.map((item) => {
-        if (family == item['family-name']) {
-          setList(item.todoList)
-        } else {
-        }
-      })
-    }
+    const userCol = collection(db, 'users')
+    const userSnapshot = await getDocs(userCol)
+    const userList = userSnapshot.docs.map((doc) => doc.data())
+    userList.map((item) => {
+      if (item['user-email'] == auth.currentUser.email) {
+        setUserCurrentFamily(item['user-current-family'])
+        setName(item['user-name'])
+        family = item['user-current-family']
+      }
+    })
+    const userColF = collection(db, 'families')
+    const userSnapshotF = await getDocs(userColF)
+    const userListF = userSnapshotF.docs.map((doc) => doc.data())
+    userListF.map((item) => {
+      if (family == item['family-name']) {
+        setList(item.todoList)
+      } else {
+      }
+    })
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    wait(100).then(() => {
+      GetUser()
+      setRefreshing(false)
+    })
+  }, [])
+
+  useEffect(() => {
     GetUser()
   }, [])
 
@@ -69,9 +103,12 @@ export default function ToDoScreen() {
   function ListRender({ item, index }) {
     return (
       <TouchableOpacity
+        activeOpacity={0.8}
         style={styles.listView}
         onPress={() => {
           list[index].isActive = !list[index].isActive
+          list[index].doneBy = name
+
           setDBList(list)
         }}
         onLongPress={() => {
@@ -79,11 +116,7 @@ export default function ToDoScreen() {
           setDBList(list)
         }}
       >
-        <Ionicons
-          name="checkbox-outline"
-          size={24}
-          color={item.isActive ? '#eeeeee00' : '#333'}
-        />
+        <Ionicons name={item.icon} size={24} />
         <Text
           style={[
             styles.listText,
@@ -92,19 +125,57 @@ export default function ToDoScreen() {
         >
           {item.item}
         </Text>
+        <Text style={styles.listName}>written by {item.author}</Text>
+        <Text style={styles.listDoneName}>
+          {item.doneBy ? `done by ${item.doneBy}` : ''}
+        </Text>
       </TouchableOpacity>
     )
   }
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.headerText}>-----To Do Screen-----</Text>
+      {/* header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={35} color={colors.black} />
+        </TouchableOpacity>
+        <View style={styles.dots}>
+          <Text style={styles.headerText}>Your Task List</Text>
+        </View>
+      </View>
+      <ScrollView
+        style={{ paddingHorizontal: '5%' }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {list.map((item, index) => (
           <ListRender item={item} index={index} key={index} />
         ))}
-      </View>
-      <View>
+      </ScrollView>
+      <View style={styles.inputView}>
+        <View style={styles.iconsView}>
+          {icons.map((item, index) => (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                if (item == curIcon) setCurIcon('')
+                else setCurIcon(item)
+              }}
+              style={[
+                styles.iconBlock,
+                {
+                  backgroundColor:
+                    item == curIcon ? colors.maingreen : '#00000000',
+                },
+              ]}
+              key={index}
+            >
+              <Ionicons name={item} size={24} color="black" />
+            </TouchableOpacity>
+          ))}
+        </View>
         <View style={styles.input}>
           <TextInput
             placeholder="item"
@@ -116,19 +187,22 @@ export default function ToDoScreen() {
         <TouchableOpacity
           style={styles.buttonAdd}
           onPress={() => {
-            if (item) {
-              setDBList([...list, { item: item, isActive: true }])
+            if (item.trim()) {
+              setDBList([
+                ...list,
+                {
+                  item: item,
+                  isActive: true,
+                  author: name,
+                  icon: curIcon,
+                  doneBy: '',
+                },
+              ])
               setItem('')
             }
           }}
         >
           <Text>Add new task</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.buttonBack}
-          onPress={() => navigation.navigate('MainScreen')}
-        >
-          <Text>Back</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -137,27 +211,70 @@ export default function ToDoScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    padding: '5%',
+    backgroundColor: colors.background,
+
     flex: 1,
     paddingTop: 20,
     justifyContent: 'space-between',
   },
+  // header
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 20,
+  },
   headerText: {
-    alignSelf: 'center',
+    fontSize: 24,
+    letterSpacing: 1,
   },
   listView: {
     width: '100%',
-    backgroundColor: 'red',
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 1,
-    backgroundColor: '#eee',
+    marginVertical: 3,
+    // backgroundColor: colors,
     padding: 5,
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: colors.black,
   },
   listText: {
     fontSize: 20,
+    marginLeft: 8,
+  },
+  listName: {
+    position: 'absolute',
+    right: 5,
+    top: 3,
+    color: '#444',
+    fontSize: 12,
+  },
+  listDoneName: {
+    position: 'absolute',
+    right: 5,
+    bottom: 3,
+    color: '#444',
+    fontSize: 12,
+  },
+  inputView: {
+    backgroundColor: colors.white,
+    borderTopRightRadius: 35,
+    borderTopLeftRadius: 35,
+    padding: 20,
+  },
+  iconsView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  iconBlock: {
+    borderWidth: 1,
+    borderRadius: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 30,
+    width: 30,
   },
   input: {
     width: '100%',
@@ -178,23 +295,13 @@ const styles = StyleSheet.create({
   buttonAdd: {
     marginVertical: 5,
     padding: 5,
-    backgroundColor: '#0088ee',
+    backgroundColor: colors.mainpurple,
+    borderWidth: 1,
     borderRadius: 5,
     width: '100%',
     height: 30,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  buttonBack: {
-    marginVertical: 5,
-    padding: 5,
-    backgroundColor: 'red',
-    borderRadius: 5,
-    width: '100%',
-    height: 30,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 })

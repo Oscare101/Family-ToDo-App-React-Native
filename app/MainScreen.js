@@ -60,9 +60,9 @@ export default function MainScreen() {
     },
   ]
 
-  useBackHandler(() => {
-    return true
-  })
+  // useBackHandler(() => {
+  //   return true
+  // })
 
   const renderFlatlist = ({ item }) => {
     return (
