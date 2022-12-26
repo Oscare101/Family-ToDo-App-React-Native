@@ -32,10 +32,15 @@ import { auth } from '../firebase/firebase-config'
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout))
+}
+
 export default function MainScreen() {
   const [listLength, setListLength] = useState()
   const navigation = useNavigation()
   const isFocused = useIsFocused()
+  const [refreshing, setRefreshing] = useState(false)
 
   const Data = [
     {
@@ -51,7 +56,7 @@ export default function MainScreen() {
       title: 'Goals',
       text: 'set long-term and big goals',
       icon: 'bookmarks-outline',
-      screen: '',
+      screen: 'FamilyScreen',
       color: colors.purple,
     },
     {
@@ -59,7 +64,7 @@ export default function MainScreen() {
       title: 'Finance',
       text: 'manage family expenses and income',
       icon: 'cash-outline',
-      screen: '',
+      screen: 'FamilyScreen',
       color: colors.green,
     },
     {
@@ -67,7 +72,7 @@ export default function MainScreen() {
       title: 'Calendar',
       text: 'plan your events',
       icon: 'calendar',
-      screen: '',
+      screen: 'FamilyScreen',
       color: colors.orange,
     },
   ]
@@ -212,6 +217,19 @@ export default function MainScreen() {
   // const login = <Login />
   // const registration = <Registration />
 
+  const config = {
+    velocityThreshold: 0.3,
+    directionalOffsetThreshold: 80,
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    wait(100).then(() => {
+      GetUser()
+      setRefreshing(false)
+    })
+  }, [])
+
   return (
     <View style={styles.container}>
       <StatusBar />
@@ -264,7 +282,6 @@ export default function MainScreen() {
             </View>
           </TouchableOpacity>
         </View>
-
         {/* bottom header */}
         <View style={styles.bottomHeaderBlock}>
           <TouchableOpacity
@@ -304,6 +321,8 @@ export default function MainScreen() {
           data={Data}
           renderItem={renderFlatlist}
           keyExtractor={(item) => item.id}
+          onRefresh={() => onRefresh()}
+          refreshing={refreshing}
         />
       </View>
     </View>
