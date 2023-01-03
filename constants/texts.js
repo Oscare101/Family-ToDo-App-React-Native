@@ -21,8 +21,12 @@ export default {
     chat: 'chat',
     Account: 'Account',
     Settings: 'Settings',
+    // todo screen
+    YourTaskList: 'Your Task List',
     writtenBy: 'written by',
     doneBy: 'done by',
+    AddNewTask: 'Add new task',
+    placeholder: 'start typing a task',
   },
   ua: {
     // settings screen
@@ -46,7 +50,11 @@ export default {
     chat: 'чат',
     Account: 'Профіль',
     Settings: 'Налаштування',
+    // todo screen
+    YourTaskList: 'Список задач',
     writtenBy: 'написано',
     doneBy: 'зроблено',
+    AddNewTask: 'Додати задачу',
+    placeholder: 'почніть вводити задачу',
   },
 }

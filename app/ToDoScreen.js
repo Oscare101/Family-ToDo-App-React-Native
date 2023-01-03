@@ -158,7 +158,7 @@ export default function ToDoScreen() {
           <Ionicons name="arrow-back" size={35} color={colors.black} />
         </TouchableOpacity>
         <View style={styles.dots}>
-          <Text style={styles.headerText}>Your Task List</Text>
+          <Text style={styles.headerText}>{t['YourTaskList']}</Text>
         </View>
       </View>
       <ScrollView
@@ -195,7 +195,7 @@ export default function ToDoScreen() {
         </View>
         <View style={styles.input}>
           <TextInput
-            placeholder="item"
+            placeholder={t['placeholder']}
             style={styles.inputLine}
             value={item}
             onChangeText={(text) => setItem(text)}
@@ -219,7 +219,7 @@ export default function ToDoScreen() {
             }
           }}
         >
-          <Text>Add new task</Text>
+          <Text>{t['AddNewTask']}</Text>
         </TouchableOpacity>
       </View>
     </View>

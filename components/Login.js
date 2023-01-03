@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
-  Alert,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 // import auth from '../firebase/firebase-config'
@@ -25,6 +25,7 @@ const height = Dimensions.get('window').height
 export default function Login() {
   const navigation = useNavigation()
   const isFocused = useIsFocused()
+  const [activity, setActivity] = useState(false)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -57,12 +58,23 @@ export default function Login() {
   }
 
   const GetEmail = async () => {
-    setEmail(await AsyncStorage.getItem('email'))
-    setPassword(await AsyncStorage.getItem('password'))
+    let e = await AsyncStorage.getItem('email')
+    let p = await AsyncStorage.getItem('password')
+    setEmail(e)
+    setPassword(p)
+    if (e) {
+      setActivity(true)
+      signInWithEmailAndPassword(auth, e, p)
+        .then(async (re) => {
+          navigation.navigate('MainNavigation')
+        })
+        .catch((err) => console.log(err))
+    }
   }
 
   useEffect(() => {
     if (isFocused) {
+      setActivity(true)
       GetEmail()
     }
   }, [isFocused])

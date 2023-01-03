@@ -269,7 +269,7 @@ export default function MainScreen() {
               <View style={styles.toDoButtonViewOpen}>
                 <View style={styles.toDoButtonViewOpenIcon}>
                   <Ionicons
-                    name="newspaper-outline"
+                    name="chatbox-ellipses-outline"
                     size={24}
                     color={colors.white}
                   />
@@ -433,7 +433,6 @@ const styles = StyleSheet.create({
   personalButtonViewText: {
     color: '#fffdfc',
     fontSize: 16,
-    letterSpacing: 2,
   },
   // ToDo Button View
 
@@ -491,7 +490,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     borderRadius: 100,
-    width: width * 0.55 * 0.5 + width * 0.35,
+    width: width * 0.5 - 20,
     height: 40,
     borderWidth: 2,
     borderColor: colors.darkbackground,
@@ -509,7 +508,7 @@ const styles = StyleSheet.create({
 
   bottomHeaderSettingsView: {
     height: 40,
-    width: widthForSmallButtons,
+    width: width * 0.5 - 30,
     backgroundColor: colors.black,
     borderRadius: 100,
     flexDirection: 'row',
@@ -519,7 +518,7 @@ const styles = StyleSheet.create({
   },
   bottomHeaderSettingsTitle: {
     color: colors.white,
-    fontSize: 14,
+    fontSize: 18,
     letterSpacing: 1,
   },
 
