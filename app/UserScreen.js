@@ -86,6 +86,7 @@ export default function UserScreen() {
           <View style={styles.userImage} />
         </View>
       </View>
+
       <TouchableOpacity onPress={() => LogOut()}>
         <Text>Log Out</Text>
       </TouchableOpacity>

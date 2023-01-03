@@ -46,6 +46,7 @@ export default function Registration() {
       .then(async (re) => {
         await AsyncStorage.setItem('email', email)
         await AsyncStorage.setItem('password', password)
+        await AsyncStorage.setItem('language', 'en')
 
         SetUserName()
         setEmail('')

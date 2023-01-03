@@ -28,6 +28,7 @@ import {
 import { db } from '../firebase/firebase-config'
 
 import colors from '../constants/colors'
+import texts from '../constants/texts'
 import { auth } from '../firebase/firebase-config'
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
@@ -41,6 +42,7 @@ export default function MainScreen() {
   const navigation = useNavigation()
   const isFocused = useIsFocused()
   const [refreshing, setRefreshing] = useState(false)
+  const [t, setT] = useState({})
 
   const Data = [
     {
@@ -100,11 +102,16 @@ export default function MainScreen() {
       }
     })
   }
+  async function getLanguage() {
+    let c = await AsyncStorage.getItem('language')
+    setT(texts[c])
+  }
 
   useEffect(() => {
     // Call only when screen open or when back on screen
     if (isFocused) {
       GetUser()
+      getLanguage()
     }
   }, [isFocused])
 
@@ -145,42 +152,43 @@ export default function MainScreen() {
   function ContentDate() {
     const date = new Date()
     let month = ''
-    switch (date.getMonth()) {
+
+    switch (date.getMonth() + 1) {
       case 1:
-        month = 'January'
+        month = t['January']
         break
       case 2:
-        month = 'February'
+        month = t['February']
         break
       case 3:
-        month = 'March'
+        month = t['March']
         break
       case 4:
-        month = 'April'
+        month = t['April']
         break
       case 5:
-        month = 'May'
+        month = t['May']
         break
       case 6:
-        month = 'June'
+        month = t['June']
         break
       case 7:
-        month = 'July'
+        month = t['July']
         break
       case 8:
-        month = 'August'
+        month = t['August']
         break
       case 9:
-        month = 'September'
+        month = t['September']
         break
       case 10:
-        month = 'October'
+        month = t['October']
         break
       case 11:
-        month = 'November'
+        month = t['November']
         break
       case 12:
-        month = 'December'
+        month = t['December']
         break
     }
 
@@ -209,19 +217,6 @@ export default function MainScreen() {
     )
   }
 
-  // useEffect(async () => {
-  //   setEmail(await AsyncStorage.getItem('email'))
-  //   console.log('useEffect Done=====================')
-  // }, [])
-
-  // const login = <Login />
-  // const registration = <Registration />
-
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80,
-  }
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
     wait(100).then(() => {
@@ -236,7 +231,7 @@ export default function MainScreen() {
       <View style={styles.headerBlock}>
         {/* top header */}
         <View style={styles.headerTexts}>
-          <Text style={styles.headerTextsTitle}>Your Task Manager</Text>
+          <Text style={styles.headerTextsTitle}>{t['yourTaskMahager']}</Text>
           <ContentDate />
         </View>
         {/* mid header */}
@@ -255,7 +250,9 @@ export default function MainScreen() {
               </View>
               <View style={styles.personalButtonViewTextView}>
                 <Text style={styles.personalButtonViewTitle}>{listLength}</Text>
-                <Text style={styles.personalButtonViewText}>tasks left</Text>
+                <Text style={styles.personalButtonViewText}>
+                  {t['tasksLeft']}
+                </Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -266,7 +263,7 @@ export default function MainScreen() {
             <View style={styles.toDoButtonView}>
               <View style={styles.toDoButtonViewWithText}>
                 <Text style={styles.toDoButtonViewWithTextText}>
-                  Discuss your goals with others
+                  {t['discussYourGoalsWithOthers']}
                 </Text>
               </View>
               <View style={styles.toDoButtonViewOpen}>
@@ -277,7 +274,7 @@ export default function MainScreen() {
                     color={colors.white}
                   />
                 </View>
-                <Text style={styles.toDoButtonViewOpenText}>chat</Text>
+                <Text style={styles.toDoButtonViewOpenText}>{t['chat']}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -289,7 +286,9 @@ export default function MainScreen() {
             onPress={() => navigation.navigate('UserScreen')}
           >
             <View style={styles.bottomHeaderAccountView}>
-              <Text style={styles.bottomHeaderAccountTitle}>Account</Text>
+              <Text style={styles.bottomHeaderAccountTitle}>
+                {t['Account']}
+              </Text>
               <View style={styles.bottomHeaderAccountIcon}>
                 <Ionicons
                   name="person-circle-outline"
@@ -304,7 +303,9 @@ export default function MainScreen() {
             onPress={() => navigation.navigate('SettingsScreen')}
           >
             <View style={styles.bottomHeaderSettingsView}>
-              <Text style={styles.bottomHeaderSettingsTitle}>Settings</Text>
+              <Text style={styles.bottomHeaderSettingsTitle}>
+                {t['Settings']}
+              </Text>
               {/* <Ionicons
                 name="settings-outline"
                 size={35}
@@ -518,8 +519,8 @@ const styles = StyleSheet.create({
   },
   bottomHeaderSettingsTitle: {
     color: colors.white,
-    fontSize: 18,
-    letterSpacing: 2,
+    fontSize: 14,
+    letterSpacing: 1,
   },
 
   //////////////////

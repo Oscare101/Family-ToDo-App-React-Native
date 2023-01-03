@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { Ionicons } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
 import {
@@ -22,7 +23,8 @@ import {
 } from 'firebase/firestore/lite'
 import { db } from '../firebase/firebase-config'
 import colors from '../constants/colors'
-
+import { useIsFocused } from '@react-navigation/native'
+import texts from '../constants/texts'
 const auth = getAuth()
 
 const wait = (timeout) => {
@@ -48,6 +50,9 @@ export default function ToDoScreen() {
   const [item, setItem] = useState('')
   // const [icon, setIcon] = useState('')
   const [curIcon, setCurIcon] = useState('')
+  const [t, setT] = useState({})
+
+  const isFocused = useIsFocused()
 
   const [refreshing, setRefreshing] = React.useState(false)
 
@@ -74,6 +79,10 @@ export default function ToDoScreen() {
       }
     })
   }
+  async function getLanguage() {
+    let c = await AsyncStorage.getItem('language')
+    setT(texts[c])
+  }
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
@@ -84,8 +93,12 @@ export default function ToDoScreen() {
   }, [])
 
   useEffect(() => {
-    GetUser()
-  }, [])
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      GetUser()
+      getLanguage()
+    }
+  }, [isFocused])
 
   const setDBList = async (item) => {
     setList([])
@@ -107,7 +120,7 @@ export default function ToDoScreen() {
         style={styles.listView}
         onPress={() => {
           list[index].isActive = !list[index].isActive
-          list[index].doneBy = name
+          list[index].doneBy = list[index].doneBy == '' ? name : ''
 
           setDBList(list)
         }}
@@ -125,9 +138,11 @@ export default function ToDoScreen() {
         >
           {item.item}
         </Text>
-        <Text style={styles.listName}>written by {item.author}</Text>
+        <Text style={styles.listName}>
+          {t['writtenBy']} {item.author}
+        </Text>
         <Text style={styles.listDoneName}>
-          {item.doneBy ? `done by ${item.doneBy}` : ''}
+          {item.doneBy ? `${t['doneBy']} ${item.doneBy}` : ''}
         </Text>
       </TouchableOpacity>
     )
